@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -215,13 +214,11 @@ body, html {
     transform: translateX(200%) skewX(-15deg);
 }
 
-.menu-item:hover::after,
-.menu-item.active::after {
+.menu-item:hover::after {
     width: 90%;
 }
 
-.menu-item:hover,
-.menu-item.active {
+.menu-item:hover {
     color: var(--metallic-gold);
     transform: translateY(-2px);
     text-shadow: 
@@ -236,14 +233,6 @@ body, html {
         0 10px 20px rgba(0, 0, 0, 0.2),
         0 0 15px rgba(139, 0, 0, 0.1),
         0 0 15px rgba(212, 175, 55, 0.1);
-}
-
-.menu-item.active {
-    background: linear-gradient(90deg,
-        rgba(139, 0, 0, 0.08),
-        rgba(212, 175, 55, 0.12),
-        rgba(139, 0, 0, 0.08)
-    );
 }
 
 .side-ornament {
@@ -355,22 +344,20 @@ body, html {
             <h1 class="title">LINKEXPRESS</h1>
         </div>
         
-<nav class="menu" style="display: none;">
-    <a class="menu-item" href="https://finalapp-nine.vercel.app/" target="_blank">
-        <div class="highlight"></div>
-        New Form
-    </a>
-    <a class="menu-item" href="https://dashboard2-iota.vercel.app/" target="_blank">
-        <div class="highlight"></div>
-        Load Form
-    </a>
-    <a class="menu-item">
-        <div class="highlight"></div>
-        Exit
-    </a>
-</nav>
-
-
+        <nav class="menu" style="display: none;">
+            <a class="menu-item" href="https://finalapp-nine.vercel.app/" target="_blank">
+                <div class="highlight"></div>
+                New Form
+            </a>
+            <a class="menu-item" href="https://dashboard2-iota.vercel.app/" target="_blank">
+                <div class="highlight"></div>
+                Load Form
+            </a>
+            <a class="menu-item">
+                <div class="highlight"></div>
+                Exit
+            </a>
+        </nav>
 
         <div class="prompt">Press Any Key to Begin</div>
     </div>
@@ -396,24 +383,16 @@ body, html {
                 
                 gsap.set(menu, { display: 'flex' });
                 
-                gsap.fromTo(menuItems, 
-                    { 
-                        opacity: 0, 
-                        y: 30,
-                        rotationX: -15,
-                        filter: 'blur(10px)'
-                    },
-                    { 
-                        opacity: 1, 
-                        y: 0,
-                        rotationX: 0,
-                        filter: 'blur(0px)',
-                        duration: 1.2, 
-                        stagger: 0.2, 
-                        ease: 'power3.out',
-                        onComplete: addMenuListeners
-                    }
-                );
+                // Show all menu items at once without stagger
+                gsap.to(menuItems, { 
+                    opacity: 1, 
+                    y: 0,
+                    rotationX: 0,
+                    filter: 'blur(0px)',
+                    duration: 0.5,
+                    ease: 'power3.out',
+                    onComplete: addMenuListeners
+                });
             }
 
             function addMenuListeners() {
@@ -433,7 +412,7 @@ body, html {
                             duration: 0.3,
                             ease: 'power2.out',
                             color: 'var(--metallic-gold)',
-                            textShadow: '0 0 10px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.2)',
+                           textShadow: '0 0 10px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.2)',
                             boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(212, 175, 55, 0.1)'
                         });
 
@@ -469,8 +448,11 @@ body, html {
                     });
                     
                     item.addEventListener('click', () => {
-                        menuItems.forEach(i => i.classList.remove('active'));
-                        item.classList.add('active');
+                        // Only add active class for Exit button
+                        if (!item.getAttribute('href')) {
+                            menuItems.forEach(i => i.classList.remove('active'));
+                            item.classList.add('active');
+                        }
                         
                         // Enhanced click animation
                         gsap.timeline()
