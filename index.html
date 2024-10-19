@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,15 +9,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;700&family=Raleway:wght@200;400;600&display=swap');
 
 :root {
-    --bg-dark: #0a0a0a;
+    --bg-dark: #050505;
     --metallic-red: #8B0000;
     --metallic-gold: #D4AF37;
     --metallic-silver: #C0C0C0;
-    --text-light: #E0E0E0;
+    --text-light: #F8F8F8;
     --premium-gradient: linear-gradient(135deg, 
-        rgba(192, 192, 192, 0.8) 0%,
-        rgba(212, 175, 55, 0.9) 50%,
-        rgba(139, 0, 0, 0.8) 100%);
+        rgba(192, 192, 192, 0.98) 0%,
+        rgba(212, 175, 55, 1) 50%,
+        rgba(139, 0, 0, 0.98) 100%);
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    --tilt-x: 0deg;
+    --tilt-y: 0deg;
 }
 
 * {
@@ -33,6 +38,9 @@ body, html {
     color: var(--text-light);
     overflow-x: hidden;
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    perspective: 1000px;
 }
 
 .container {
@@ -45,9 +53,16 @@ body, html {
     justify-content: center;
     padding: 1rem;
     background: 
-        linear-gradient(135deg, rgba(139, 0, 0, 0.15) 0%, transparent 50%),
-        linear-gradient(225deg, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(192, 192, 192, 0.08) 0%, transparent 70%);
+        linear-gradient(135deg, rgba(139, 0, 0, 0.15) 0%, transparent 60%),
+        linear-gradient(225deg, rgba(212, 175, 55, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at var(--mouse-x) var(--mouse-y), 
+            rgba(192, 192, 192, 0.15) 0%, 
+            transparent 50%);
+    box-shadow: 
+        inset 0 0 150px rgba(0, 0, 0, 0.7),
+        inset 0 0 50px rgba(139, 0, 0, 0.1),
+        inset 0 0 30px rgba(212, 175, 55, 0.1);
+    transition: background 0.8s ease-out;
 }
 
 .metallic-overlay {
@@ -57,18 +72,25 @@ body, html {
     width: 100%;
     height: 100%;
     background: 
-        linear-gradient(45deg, rgba(192, 192, 192, 0.05) 25%, transparent 25%),
-        linear-gradient(-45deg, rgba(212, 175, 55, 0.05) 25%, transparent 25%);
-    background-size: 4px 4px;
-    opacity: 0.4;
-    mix-blend-mode: overlay;
+        linear-gradient(45deg, 
+            rgba(192, 192, 192, 0.05) 25%, 
+            rgba(212, 175, 55, 0.03) 50%, 
+            rgba(139, 0, 0, 0.05) 75%),
+        linear-gradient(-45deg, 
+            rgba(212, 175, 55, 0.05) 25%, 
+            rgba(192, 192, 192, 0.03) 50%, 
+            rgba(139, 0, 0, 0.05) 75%);
+    background-size: 3px 3px;
+    opacity: 0.6;
+    mix-blend-mode: soft-light;
     pointer-events: none;
-    animation: overlayShift 20s linear infinite;
+    animation: overlayShift 25s linear infinite;
+    filter: contrast(125%) brightness(115%);
 }
 
 @keyframes overlayShift {
     0% { background-position: 0 0; }
-    100% { background-position: 100px 100px; }
+    100% { background-position: 120px 120px; }
 }
 
 .title-container {
@@ -76,6 +98,13 @@ body, html {
     margin: clamp(2rem, 8vh, 4rem) 0;
     width: 100%;
     text-align: center;
+    filter: drop-shadow(0 0 35px rgba(212, 175, 55, 0.25));
+    transform: 
+        rotateX(var(--tilt-y)) 
+        rotateY(var(--tilt-x)) 
+        translateZ(20px);
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .title {
@@ -86,40 +115,47 @@ body, html {
     text-align: center;
     background: var(--premium-gradient);
     background-size: 200% 200%;
-    animation: shimmer 6s linear infinite;
+    animation: shimmer 8s ease infinite;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     text-shadow: 
-        0 0 15px rgba(212, 175, 55, 0.3),
-        0 0 30px rgba(212, 175, 55, 0.2),
-        0 0 45px rgba(139, 0, 0, 0.1);
+        0 0 25px rgba(212, 175, 55, 0.45),
+        0 0 45px rgba(212, 175, 55, 0.25),
+        0 0 65px rgba(139, 0, 0, 0.25);
     padding: 0 1rem;
-}
-
-@keyframes shimmer {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    position: relative;
+    transform-style: preserve-3d;
 }
 
 .title::before, .title::after {
     content: '';
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
     width: min(80%, 800px);
-    height: 2px;
+    height: 1.5px;
     background: linear-gradient(90deg, 
         transparent 0%,
-        var(--metallic-gold) 50%,
+        rgba(212, 175, 55, 0.8) 50%,
         transparent 100%
     );
-    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.7));
+    transform: 
+        translateX(-50%) 
+        translateZ(10px)
+        rotateX(var(--tilt-y)) 
+        rotateY(var(--tilt-x));
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .title::before { top: -20px; }
 .title::after { bottom: -20px; }
+
+@keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 
 .menu {
     display: flex;
@@ -128,6 +164,8 @@ body, html {
     padding: 1rem;
     width: min(100%, 600px);
     position: relative;
+    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.35));
+    transform-style: preserve-3d;
 }
 
 .menu-item {
@@ -143,13 +181,19 @@ body, html {
     cursor: pointer;
     text-align: center;
     background: linear-gradient(90deg, 
-        transparent, 
+        rgba(0, 0, 0, 0.4), 
         rgba(192, 192, 192, 0.08), 
-        transparent
+        rgba(0, 0, 0, 0.4)
     );
-    border-radius: 2px;
+    border-radius: 3px;
     overflow: hidden;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    box-shadow: 
+        0 5px 20px rgba(0, 0, 0, 0.4),
+        0 0 25px rgba(212, 175, 55, 0.12),
+        inset 0 0 12px rgba(212, 175, 55, 0.06);
+    transform-style: preserve-3d;
 }
 
 .menu-item::before {
@@ -161,14 +205,15 @@ body, html {
     height: 100%;
     background: linear-gradient(90deg, 
         transparent,
-        rgba(212, 175, 55, 0.2),
-        rgba(139, 0, 0, 0.2),
-        rgba(212, 175, 55, 0.2),
+        rgba(212, 175, 55, 0.35),
+        rgba(139, 0, 0, 0.35),
+        rgba(212, 175, 55, 0.35),
         transparent
     );
     transition: transform 0.6s ease;
     transform: skewX(-15deg);
-    filter: blur(3px);
+    filter: blur(4px);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
 }
 
 .menu-item::after {
@@ -185,7 +230,7 @@ body, html {
     );
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateX(-50%);
-    filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.5));
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.7));
 }
 
 .menu-item .highlight {
@@ -196,14 +241,15 @@ body, html {
     height: 100%;
     pointer-events: none;
     background: radial-gradient(
-        circle at var(--x, 50%) var(--y, 50%),
-        rgba(139, 0, 0, 0.15) 0%,
-        rgba(212, 175, 55, 0.25) 50%,
+        circle at var(--mouse-x) var(--mouse-y),
+        rgba(139, 0, 0, 0.25) 0%,
+        rgba(212, 175, 55, 0.35) 50%,
         transparent 100%
     );
     opacity: 0;
-    transition: opacity 0.3s ease;
-    mix-blend-mode: overlay;
+    transition: all 0.6s ease;
+    mix-blend-mode: soft-light;
+    box-shadow: inset 0 0 35px rgba(212, 175, 55, 0.15);
 }
 
 .menu-item:hover .highlight {
@@ -220,30 +266,31 @@ body, html {
 
 .menu-item:hover {
     color: var(--metallic-gold);
-    transform: translateY(-2px);
+    transform: translateY(-2px) translateZ(10px);
     text-shadow: 
-        0 0 10px rgba(212, 175, 55, 0.4),
-        0 0 20px rgba(139, 0, 0, 0.2);
+        0 0 18px rgba(212, 175, 55, 0.6),
+        0 0 35px rgba(139, 0, 0, 0.35);
     background: linear-gradient(90deg,
-        rgba(139, 0, 0, 0.05),
-        rgba(212, 175, 55, 0.08),
-        rgba(139, 0, 0, 0.05)
+        rgba(139, 0, 0, 0.15),
+        rgba(212, 175, 55, 0.18),
+        rgba(139, 0, 0, 0.15)
     );
     box-shadow: 
-        0 10px 20px rgba(0, 0, 0, 0.2),
-        0 0 15px rgba(139, 0, 0, 0.1),
-        0 0 15px rgba(212, 175, 55, 0.1);
+        0 15px 35px rgba(0, 0, 0, 0.45),
+        0 0 25px rgba(139, 0, 0, 0.25),
+        0 0 25px rgba(212, 175, 55, 0.25),
+        inset 0 0 18px rgba(212, 175, 55, 0.15);
 }
 
 .side-ornament {
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    width: 2px;
+    width: 1.5px;
     height: 70vh;
-    opacity: 0.6;
+    opacity: 0.7;
     display: none;
-    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.45));
 }
 
 @media (min-width: 768px) {
@@ -258,16 +305,21 @@ body, html {
     width: 100%;
     height: 100%;
     background: linear-gradient(to bottom,
+        transparent,
         var(--metallic-gold),
         var(--metallic-red),
-        var(--metallic-gold)
+        var(--metallic-gold),
+        transparent
     );
-    animation: ornamentGlow 4s infinite alternate;
+    animation: ornamentGlow 5s infinite alternate;
+    box-shadow: 
+        0 0 18px rgba(212, 175, 55, 0.35),
+        0 0 35px rgba(139, 0, 0, 0.25);
 }
 
 @keyframes ornamentGlow {
-    0% { opacity: 0.4; filter: blur(1px); }
-    100% { opacity: 0.9; filter: blur(2px); }
+    0% { opacity: 0.45; filter: blur(1px); }
+    100% { opacity: 0.95; filter: blur(2.5px); }
 }
 
 .side-ornament.left { left: 5vw; }
@@ -278,60 +330,39 @@ body, html {
     bottom: clamp(1.5rem, 5vh, 3rem);
     font-size: clamp(0.8rem, 2.5vw, 1.2rem);
     color: var(--text-light);
-    opacity: 0.6;
+    opacity: 0.65;
     text-transform: uppercase;
     letter-spacing: 3px;
-    animation: pulse 2s infinite;
+    animation: pulse 2.5s infinite;
     text-align: center;
     width: 100%;
     padding: 0 1rem;
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    text-shadow: 
+        0 0 18px rgba(212, 175, 55, 0.35),
+        0 0 35px rgba(139, 0, 0, 0.25);
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 0.6; text-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
-    50% { opacity: 0.3; text-shadow: 0 0 15px rgba(139, 0, 0, 0.3); }
+    0%, 100% { opacity: 0.65; text-shadow: 0 0 18px rgba(212, 175, 55, 0.35); }
+    50% { opacity: 0.35; text-shadow: 0 0 25px rgba(139, 0, 0, 0.45); }
 }
 
 .premium-particle {
     position: fixed;
-    background: radial-gradient(circle, var(--metallic-gold), var(--metallic-red), transparent);
+    background: radial-gradient(
+        circle, 
+        var(--metallic-gold) 0%,
+        var(--metallic-red) 50%,
+        transparent 100%
+    );
     border-radius: 50%;
     pointer-events: none;
     z-index: 1;
-    filter: blur(1px);
+    filter: blur(1.5px) brightness(125%);
     mix-blend-mode: screen;
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
 }
 
-@media (max-height: 500px) {
-    .container {
-        padding: 2rem 1rem;
-        justify-content: flex-start;
-    }
-    
-    .title-container {
-        margin: 1rem 0;
-    }
-    
-    .menu {
-        gap: 1rem;
-    }
-    
-    .menu-item {
-        padding: 0.5rem 1.5rem;
-    }
-    
-    .prompt {
-        position: relative;
-        margin-top: 2rem;
-    }
-}
-
-@supports (-webkit-touch-callout: none) {
-    .container {
-        min-height: -webkit-fill-available;
-    }
-}
     </style>
 </head>
 <body>
