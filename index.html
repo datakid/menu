@@ -3,20 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkExpress - Dark Metallic Edition</title>
+    <title>LinkExpress - Ultimate Edition</title>
     <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;700&family=Raleway:wght@200;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;700&family=Raleway:wght@200;400;600&family=Cinzel:wght@400;700;900&display=swap');
 
 :root {
     --bg-dark: #050505;
     --metallic-red: #8B0000;
     --metallic-gold: #D4AF37;
     --metallic-silver: #C0C0C0;
+    --metallic-platinum: #E5E4E2;
+    --metallic-bronze: #CD7F32;
     --text-light: #F8F8F8;
-    --premium-gradient: linear-gradient(135deg, 
+    --premium-gradient: linear-gradient(135deg,
         rgba(192, 192, 192, 0.98) 0%,
         rgba(212, 175, 55, 1) 50%,
         rgba(139, 0, 0, 0.98) 100%);
+    --ultra-premium-gradient: linear-gradient(135deg,
+        rgba(229, 228, 226, 0.95) 0%,
+        rgba(212, 175, 55, 1) 30%,
+        rgba(139, 0, 0, 0.95) 60%,
+        rgba(205, 127, 50, 0.95) 100%);
     --mouse-x: 50%;
     --mouse-y: 50%;
     --tilt-x: 0deg;
@@ -35,11 +42,12 @@ body, html {
     background-color: var(--bg-dark);
     font-family: 'Raleway', sans-serif;
     color: var(--text-light);
-    overflow-x: hidden;
+    overflow: hidden;
     position: relative;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    perspective: 1000px;
+    perspective: 1200px;
+    cursor: default;
 }
 
 .container {
@@ -51,17 +59,19 @@ body, html {
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    background: 
+    background:
         linear-gradient(135deg, rgba(139, 0, 0, 0.15) 0%, transparent 60%),
         linear-gradient(225deg, rgba(212, 175, 55, 0.15) 0%, transparent 60%),
-        radial-gradient(circle at var(--mouse-x) var(--mouse-y), 
-            rgba(192, 192, 192, 0.15) 0%, 
+        radial-gradient(circle at var(--mouse-x) var(--mouse-y),
+            rgba(192, 192, 192, 0.15) 0%,
             transparent 50%);
-    box-shadow: 
+    box-shadow:
         inset 0 0 150px rgba(0, 0, 0, 0.7),
         inset 0 0 50px rgba(139, 0, 0, 0.1),
         inset 0 0 30px rgba(212, 175, 55, 0.1);
     transition: background 0.8s ease-out;
+    transform-style: preserve-3d;
+    z-index: 1;
 }
 
 .metallic-overlay {
@@ -70,14 +80,14 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        linear-gradient(45deg, 
-            rgba(192, 192, 192, 0.05) 25%, 
-            rgba(212, 175, 55, 0.03) 50%, 
+    background:
+        linear-gradient(45deg,
+            rgba(192, 192, 192, 0.05) 25%,
+            rgba(212, 175, 55, 0.03) 50%,
             rgba(139, 0, 0, 0.05) 75%),
-        linear-gradient(-45deg, 
-            rgba(212, 175, 55, 0.05) 25%, 
-            rgba(192, 192, 192, 0.03) 50%, 
+        linear-gradient(-45deg,
+            rgba(212, 175, 55, 0.05) 25%,
+            rgba(192, 192, 192, 0.03) 50%,
             rgba(139, 0, 0, 0.05) 75%);
     background-size: 3px 3px;
     opacity: 0.6;
@@ -85,6 +95,20 @@ body, html {
     pointer-events: none;
     animation: overlayShift 25s linear infinite;
     filter: contrast(125%) brightness(115%);
+    z-index: -2;
+}
+
+.grain-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iLjA1IiBkPSJNMCAwaDMwMHYzMDBIMHoiLz48L3N2Zz4=');
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: -2;
 }
 
 @keyframes overlayShift {
@@ -98,33 +122,74 @@ body, html {
     width: 100%;
     text-align: center;
     filter: drop-shadow(0 0 35px rgba(212, 175, 55, 0.25));
-    transform: 
-        rotateX(var(--tilt-y)) 
-        rotateY(var(--tilt-x)) 
-        translateZ(20px);
-    transform-style: preserve-3d;
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: opacity 1.5s ease;
+    opacity: 1;
+    z-index: 2;
+}
+
+.logo-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    height: 100%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(212, 175, 55, 0.2) 0%,
+        rgba(139, 0, 0, 0.15) 40%,
+        transparent 80%
+    );
+    transform: translate(-50%, -50%);
+    filter: blur(40px);
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    animation: logoGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+    0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.85); }
+    100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.15); }
 }
 
 .title {
-    font-family: 'Cormorant', serif;
+    font-family: 'Cinzel', serif;
     font-size: clamp(2.5rem, 10vw, 8rem);
-    font-weight: 300;
+    font-weight: 900;
     letter-spacing: max(0.2em, 2px);
     text-align: center;
-    background: var(--premium-gradient);
+    background: var(--ultra-premium-gradient);
     background-size: 200% 200%;
     animation: shimmer 8s ease infinite;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 
+    text-shadow:
         0 0 25px rgba(212, 175, 55, 0.45),
         0 0 45px rgba(212, 175, 55, 0.25),
         0 0 65px rgba(139, 0, 0, 0.25);
     padding: 0 1rem;
     position: relative;
-    transform-style: preserve-3d;
+    text-transform: uppercase;
+}
+
+.title-emboss {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.3) 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    mix-blend-mode: overlay;
+    pointer-events: none;
 }
 
 .title::before, .title::after {
@@ -132,23 +197,30 @@ body, html {
     position: absolute;
     left: 50%;
     width: min(80%, 800px);
-    height: 1.5px;
-    background: linear-gradient(90deg, 
+    height: 2px;
+    background: linear-gradient(90deg,
         transparent 0%,
         rgba(212, 175, 55, 0.8) 50%,
         transparent 100%
     );
     filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.7));
-    transform: 
-        translateX(-50%) 
-        translateZ(10px)
-        rotateX(var(--tilt-y)) 
-        rotateY(var(--tilt-x));
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform: translateX(-50%);
 }
 
-.title::before { top: -20px; }
-.title::after { bottom: -20px; }
+.title::before {
+    top: -20px;
+    animation: linePulse 5s ease-in-out infinite alternate;
+}
+
+.title::after {
+    bottom: -20px;
+    animation: linePulse 5s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes linePulse {
+    0% { width: 60%; opacity: 0.6; }
+    100% { width: 80%; opacity: 0.9; }
+}
 
 @keyframes shimmer {
     0% { background-position: 0% 50%; }
@@ -165,10 +237,13 @@ body, html {
     position: relative;
     filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.35));
     transform-style: preserve-3d;
+    opacity: 0;
+    z-index: 10;
+    pointer-events: none; /* Initially disable interactions */
 }
 
 .menu-item {
-    font-family: 'Cormorant', serif;
+    font-family: 'Cinzel', serif;
     font-size: clamp(1.2rem, 4vw, 2.5rem);
     color: var(--text-light);
     text-decoration: none;
@@ -177,22 +252,25 @@ body, html {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
     letter-spacing: max(4px, 0.2em);
-    cursor: pointer;
     text-align: center;
-    background: linear-gradient(90deg, 
-        rgba(0, 0, 0, 0.4), 
-        rgba(192, 192, 192, 0.08), 
+    background: linear-gradient(90deg,
+        rgba(0, 0, 0, 0.4),
+        rgba(192, 192, 192, 0.08),
         rgba(0, 0, 0, 0.4)
     );
     border-radius: 3px;
     overflow: hidden;
     backdrop-filter: blur(8px);
     border: 1px solid rgba(212, 175, 55, 0.15);
-    box-shadow: 
+    box-shadow:
         0 5px 20px rgba(0, 0, 0, 0.4),
         0 0 25px rgba(212, 175, 55, 0.12),
         inset 0 0 12px rgba(212, 175, 55, 0.06);
     transform-style: preserve-3d;
+    transform: translateY(20px) rotateX(10deg);
+    opacity: 0;
+    filter: blur(5px);
+    cursor: pointer;
 }
 
 .menu-item::before {
@@ -202,7 +280,7 @@ body, html {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, 
+    background: linear-gradient(90deg,
         transparent,
         rgba(212, 175, 55, 0.35),
         rgba(139, 0, 0, 0.35),
@@ -213,6 +291,8 @@ body, html {
     transform: skewX(-15deg);
     filter: blur(4px);
     box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+    opacity: 1;
+    z-index: 1;
 }
 
 .menu-item::after {
@@ -222,80 +302,79 @@ body, html {
     left: 50%;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, 
+    background: linear-gradient(90deg,
         var(--metallic-gold),
         var(--metallic-red),
         var(--metallic-gold)
     );
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateX(-50%);
-    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.7));
+    filter: drop-shadow(0 0 7px rgba(212, 175, 55, 0.75));
+    border-radius: 0;
 }
 
 .menu-item .highlight {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none;
     background: radial-gradient(
-        circle at var(--mouse-x) var(--mouse-y),
+        circle at var(--x, 50%) var(--y, 50%),
         rgba(139, 0, 0, 0.25) 0%,
         rgba(212, 175, 55, 0.35) 50%,
         transparent 100%
     );
     opacity: 0;
-    transition: all 0.6s ease;
+    transition: opacity 0.6s ease;
     mix-blend-mode: soft-light;
     box-shadow: inset 0 0 35px rgba(212, 175, 55, 0.15);
+    z-index: 1;
 }
 
-.menu-item:hover .highlight {
-    opacity: 1;
+.menu-item .inner-border {
+    position: absolute;
+    top: 5px; left: 5px; right: 5px; bottom: 5px;
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    pointer-events: none;
+    box-shadow: inset 0 0 18px rgba(212, 175, 55, 0.08);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    border-radius: 0;
+    z-index: 0;
 }
 
-.menu-item:hover::before {
-    transform: translateX(200%) skewX(-15deg);
-}
-
-.menu-item:hover::after {
-    width: 90%;
-}
+.menu-item:hover .inner-border { opacity: 1; }
+.menu-item:hover .highlight { opacity: 1; }
+.menu-item:hover::before { transform: translateX(200%) skewX(-15deg); }
+.menu-item:hover::after { width: 90%; }
 
 .menu-item:hover {
     color: var(--metallic-gold);
-    transform: translateY(-2px) translateZ(10px);
-    text-shadow: 
-        0 0 18px rgba(212, 175, 55, 0.6),
-        0 0 35px rgba(139, 0, 0, 0.35);
+    transform: translateY(-3px) translateZ(12px);
+    text-shadow:
+        0 0 20px rgba(212, 175, 55, 0.65),
+        0 0 40px rgba(139, 0, 0, 0.4);
     background: linear-gradient(90deg,
-        rgba(139, 0, 0, 0.15),
-        rgba(212, 175, 55, 0.18),
-        rgba(139, 0, 0, 0.15)
+        rgba(139, 0, 0, 0.18),
+        rgba(212, 175, 55, 0.22),
+        rgba(139, 0, 0, 0.18)
     );
-    box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.45),
-        0 0 25px rgba(139, 0, 0, 0.25),
-        0 0 25px rgba(212, 175, 55, 0.25),
-        inset 0 0 18px rgba(212, 175, 55, 0.15);
+    box-shadow:
+        0 16px 38px rgba(0, 0, 0, 0.48),
+        0 0 28px rgba(139, 0, 0, 0.3),
+        0 0 30px rgba(212, 175, 55, 0.3),
+        inset 0 0 20px rgba(212, 175, 55, 0.18);
 }
 
 .side-ornament {
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    width: 1.5px;
+    width: 2px;
     height: 70vh;
-    opacity: 0.7;
+    opacity: 0.8;
     display: none;
-    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.45));
-}
-
-@media (min-width: 768px) {
-    .side-ornament {
-        display: block;
-    }
+    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.6));
+    z-index: 1;
 }
 
 .side-ornament::before {
@@ -305,24 +384,109 @@ body, html {
     height: 100%;
     background: linear-gradient(to bottom,
         transparent,
-        var(--metallic-gold),
-        var(--metallic-red),
-        var(--metallic-gold),
+        rgba(212, 175, 55, 0.7),
+        rgba(139, 0, 0, 0.9),
+        rgba(212, 175, 55, 0.7),
         transparent
     );
-    animation: ornamentGlow 5s infinite alternate;
-    box-shadow: 
-        0 0 18px rgba(212, 175, 55, 0.35),
-        0 0 35px rgba(139, 0, 0, 0.25);
+    animation: ornamentGlow 4s infinite alternate;
+    box-shadow:
+        0 0 22px rgba(212, 175, 55, 0.45),
+        0 0 40px rgba(139, 0, 0, 0.35);
 }
 
 @keyframes ornamentGlow {
-    0% { opacity: 0.45; filter: blur(1px); }
-    100% { opacity: 0.95; filter: blur(2.5px); }
+    0% { opacity: 0.5; filter: blur(1.5px); }
+    100% { opacity: 1.0; filter: blur(3px); }
 }
 
-.side-ornament.left { left: 5vw; }
-.side-ornament.right { right: 5vw; }
+.ornament-detail {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(212, 175, 55, 0.8);
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.7));
+    animation: pulseDetail 5s ease-in-out infinite;
+}
+
+@keyframes pulseDetail {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+    50% { transform: translateX(-50%) scale(1.08); opacity: 1; }
+}
+
+.ornament-detail.top { top: 5%; animation-delay: 0s; }
+.ornament-detail.middle { top: 50%; animation-delay: 0.5s; }
+.ornament-detail.bottom { bottom: 5%; animation-delay: 1s; }
+
+.ornament-detail::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: var(--metallic-gold);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 1);
+}
+
+@media (min-width: 768px) {
+    .side-ornament {
+        display: block;
+    }
+}
+
+.side-ornament.left {
+    left: 5vw;
+    transform: translateY(-50%) rotateY(var(--tilt-x));
+}
+
+.side-ornament.right {
+    right: 5vw;
+    transform: translateY(-50%) rotateY(calc(-1 * var(--tilt-x)));
+}
+
+.corner-ornament {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+    opacity: 0.7;
+    z-index: 1;
+}
+
+.corner-ornament::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom,
+        var(--metallic-gold),
+        transparent
+    );
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+.corner-ornament::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right,
+        var(--metallic-gold),
+        transparent
+    );
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+.corner-ornament.top-left { top: 20px; left: 20px; }
+.corner-ornament.top-right { top: 20px; right: 20px; transform: scaleX(-1); }
+.corner-ornament.bottom-left { bottom: 20px; left: 20px; transform: scaleY(-1); }
+.corner-ornament.bottom-right { bottom: 20px; right: 20px; transform: scale(-1); }
 
 .prompt {
     position: fixed;
@@ -336,9 +500,11 @@ body, html {
     text-align: center;
     width: 100%;
     padding: 0 1rem;
-    text-shadow: 
+    text-shadow:
         0 0 18px rgba(212, 175, 55, 0.35),
         0 0 35px rgba(139, 0, 0, 0.25);
+    display: block;
+    z-index: 10;
 }
 
 @keyframes pulse {
@@ -346,106 +512,131 @@ body, html {
     50% { opacity: 0.35; text-shadow: 0 0 25px rgba(139, 0, 0, 0.45); }
 }
 
-.premium-particle {
+.ambient-light {
     position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: radial-gradient(
-        circle, 
-        var(--metallic-gold) 0%,
-        var(--metallic-red) 50%,
-        transparent 100%
+        ellipse at var(--mouse-x) var(--mouse-y),
+        rgba(212, 175, 55, 0.05) 0%,
+        transparent 70%
     );
+    pointer-events: none;
+    mix-blend-mode: screen;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.sparkle-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+}
+
+.sparkle-particle {
+    position: absolute;
     border-radius: 50%;
     pointer-events: none;
-    z-index: 1;
-    filter: blur(1.5px) brightness(125%);
-    mix-blend-mode: screen;
-    box-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
+    opacity: 0;
+    transform-origin: center center;
+}
+
+.fire-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.ember-particle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(1px) brightness(150%);
+    box-shadow: 0 0 10px rgba(255, 150, 50, 0.8);
+    z-index: -1;
+    transform-origin: center bottom;
 }
 
 @media screen and (max-width: 1024px) {
-    .menu {
-        width: 90%;
-    }
-    
-    .menu-item {
-        font-size: clamp(0.9rem, 2.5vw, 1.8rem);
-    }
+    .menu { width: 90%; }
+    .menu-item { font-size: clamp(0.9rem, 2.5vw, 1.8rem); }
 }
-
 @media screen and (max-width: 768px) {
-    .title {
-        font-size: clamp(1.8rem, 6vw, 4rem);
-    }
-    
-    .menu-item {
-        font-size: clamp(0.8rem, 2.2vw, 1.6rem);
-        padding: clamp(0.5rem, 1.2vh, 0.8rem) clamp(0.8rem, 2.5vw, 1.5rem);
-    }
+    .title { font-size: clamp(1.8rem, 6vw, 4rem); }
+    .menu-item { font-size: clamp(0.8rem, 2.2vw, 1.6rem); padding: clamp(0.5rem, 1.2vh, 0.8rem) clamp(0.8rem, 2.5vw, 1.5rem); }
+    .side-ornament { display: none; }
 }
-
 @media screen and (max-width: 480px) {
-    .container {
-        padding: 0.5rem;
-    }
-    
-    .title {
-        font-size: clamp(1.5rem, 5vw, 3rem);
-    }
-    
-    .menu {
-        width: 95%;
-        gap: clamp(0.3rem, 1.5vh, 1rem);
-    }
-    
-    .menu-item {
-        font-size: clamp(0.7rem, 2vw, 1.4rem);
-        padding: clamp(0.4rem, 1vh, 0.7rem) clamp(0.6rem, 2vw, 1.2rem);
-    }
+    .container { padding: 0.5rem; }
+    .title { font-size: clamp(1.5rem, 5vw, 3rem); }
+    .menu { width: 95%; gap: clamp(0.3rem, 1.5vh, 1rem); }
+    .menu-item { font-size: clamp(0.7rem, 2vw, 1.4rem); padding: clamp(0.4rem, 1vh, 0.7rem) clamp(0.6rem, 2vw, 1.2rem); }
+    .corner-ornament { width: 60px; height: 60px; }
 }
-
 @media screen and (max-height: 600px) {
-    .container {
-        justify-content: flex-start;
-        padding-top: 0.5rem;
-    }
-    
-    .title-container {
-        margin-bottom: 0.5rem;
-    }
-    
-    .menu {
-        max-height: calc(100vh - 100px);
-        overflow-y: auto;
-    }
-    
-    .menu-item {
-        padding: clamp(0.3rem, 0.8vh, 0.6rem) clamp(0.5rem, 1.5vw, 1rem);
-    }
+    .container { justify-content: flex-start; padding-top: 0.5rem; }
+    .title-container { margin-bottom: 0.5rem; }
+    .menu { max-height: calc(100vh - 100px); overflow-y: auto; }
+    .menu-item { padding: clamp(0.3rem, 0.8vh, 0.6rem) clamp(0.5rem, 1.5vw, 1rem); }
 }
 
     </style>
 </head>
 <body>
     <div class="metallic-overlay"></div>
+    <div class="grain-overlay"></div>
+    <div class="ambient-light"></div>
+    <div class="sparkle-container"></div>
+
     <div class="container">
-        <div class="side-ornament left"></div>
-        <div class="side-ornament right"></div>
-        
-        <div class="title-container">
-            <h1 class="title">LINKEXPRESS</h1>
+        <div class="corner-ornament top-left"></div>
+        <div class="corner-ornament top-right"></div>
+        <div class="corner-ornament bottom-left"></div>
+        <div class="corner-ornament bottom-right"></div>
+
+        <div class="side-ornament left">
+            <div class="ornament-detail top"></div>
+            <div class="ornament-detail middle"></div>
+            <div class="ornament-detail bottom"></div>
         </div>
-        
-        <nav class="menu" style="display: none;">
+        <div class="side-ornament right">
+            <div class="ornament-detail top"></div>
+            <div class="ornament-detail middle"></div>
+            <div class="ornament-detail bottom"></div>
+        </div>
+
+        <div class="title-container">
+            <div class="logo-glow"></div>
+            <h1 class="title">LINKEXPRESS</h1>
+            <div class="title-emboss"></div>
+        </div>
+
+        <nav class="menu">
             <a class="menu-item" href="https://finalapp-nine.vercel.app/" target="_blank">
                 <div class="highlight"></div>
+                <div class="inner-border"></div>
                 New Form
             </a>
             <a class="menu-item" href="https://dashboard2-iota.vercel.app/" target="_blank">
                 <div class="highlight"></div>
+                <div class="inner-border"></div>
                 Load Form
             </a>
             <a class="menu-item">
                 <div class="highlight"></div>
+                <div class="inner-border"></div>
                 Exit
             </a>
         </nav>
@@ -455,225 +646,210 @@ body, html {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const menu = document.querySelector('.menu');
-            const menuItems = document.querySelectorAll('.menu-item');
-            const prompt = document.querySelector('.prompt');
-            let hasInteracted = false;
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Selectors ---
+    const ambientLight = document.querySelector('.ambient-light');
+    const container = document.querySelector('.container');
+    const titleContainer = document.querySelector('.title-container');
+    const menu = document.querySelector('.menu');
+    const menuItems = document.querySelectorAll('.menu-item');
+    const prompt = document.querySelector('.prompt');
+    const sparkleContainer = document.querySelector('.sparkle-container');
 
-            function showMenu() {
-                if (hasInteracted) return;
-                hasInteracted = true;
-                
-                gsap.to(prompt, { 
-                    opacity: 0, 
-                    duration: 0.5, 
-                    ease: "power2.out",
-                    onComplete: () => prompt.remove() 
-                });
-                
-                gsap.set(menu, { display: 'flex' });
-                
-                // Show all menu items at once without stagger
-                gsap.to(menuItems, { 
-                    opacity: 1, 
-                    y: 0,
-                    rotationX: 0,
-                    filter: 'blur(0px)',
-                    duration: 0.5,
-                    ease: 'power3.out',
-                    onComplete: addMenuListeners
-                });
+    // --- State Variables ---
+    let hasInteracted = false;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let isOverInteractive = false;
+
+    // --- Particle Pool ---
+    const particlePool = [];
+    const poolSize = 50;
+    let particleIndex = 0;
+
+    function getParticle() {
+        if (particlePool.length < poolSize) {
+            const particle = document.createElement('div');
+            particle.classList.add('sparkle-particle');
+            sparkleContainer.appendChild(particle);
+            particlePool.push(particle);
+            return particle;
+        } else {
+            const particle = particlePool[particleIndex];
+            particleIndex = (particleIndex + 1) % poolSize;
+            gsap.killTweensOf(particle);
+            gsap.set(particle, { clearProps: "all" });
+            particle.style.cssText = '';
+            particle.className = 'sparkle-particle';
+            return particle;
+        }
+    }
+
+    // --- Create Sparkle Function ---
+    function createSparkle(x, y, isFire) {
+        const particle = getParticle();
+        if (!particle) return;
+
+        let size, duration, driftX, driftY, initialScale, endScale, backgroundStyle, filterStyle, boxShadowStyle;
+
+        if (isFire) {
+            // EPIC FIRE EMBER Style (Hover)
+            size = Math.random() * 7 + 5; duration = Math.random() * 0.7 + 0.3; driftX = (Math.random() - 0.5) * 80; driftY = (Math.random() - 0.5) * 80; initialScale = 1.2; endScale = Math.random() * 0.2;
+            const fireColor1 = 'rgba(255, 220, 80, 1)'; const fireColor2 = 'rgba(255, 100, 50, 0.8)'; const fireColor3 = 'rgba(139, 0, 0, 0.4)';
+            backgroundStyle = `radial-gradient(circle, ${fireColor1} 0%, ${fireColor2} 45%, ${fireColor3} 100%)`; filterStyle = `blur(${Math.random() * 1 + 1}px) brightness(180%)`; boxShadowStyle = `0 0 ${Math.random() * 10 + 7}px rgba(255, 130, 0, 0.85)`;
+        } else {
+            // RED EPIC SPARKLE Style (Base Trail)
+            size = Math.random() * 5 + 3; duration = Math.random() * 1.0 + 0.6; driftX = (Math.random() - 0.5) * 50; driftY = (Math.random() - 0.5) * 50; initialScale = 1.0; endScale = Math.random() * 0.4;
+            const baseColor1 = 'rgba(255, 180, 0, 0.9)'; const baseColor2 = 'rgba(210, 60, 30, 0.75)'; const baseColor3 = 'rgba(139, 0, 0, 0.35)';
+            backgroundStyle = `radial-gradient(circle, ${baseColor1} 0%, ${baseColor2} 50%, ${baseColor3} 100%)`; filterStyle = `blur(0.5px) brightness(150%)`; boxShadowStyle = `0 0 ${Math.random() * 6 + 4}px rgba(240, 100, 0, 0.6)`;
+        }
+
+        gsap.set(particle, { x: x - size / 2, y: y - size / 2, width: size, height: size, background: backgroundStyle, filter: filterStyle, boxShadow: boxShadowStyle, opacity: 1, scale: initialScale });
+        gsap.to(particle, { duration: duration, opacity: 0, scale: endScale, x: `+=${driftX}`, y: `+=${driftY}`, ease: "power1.out" });
+    }
+
+     // --- Sparkle Generation Loop (Conditional) ---
+    setInterval(() => {
+        if (!hasInteracted) return;
+        const count = isOverInteractive ? 3 : 1;
+        for(let i = 0; i < count; i++) {
+             const offsetX = (Math.random() - 0.5) * (isOverInteractive ? 15 : 10);
+             const offsetY = (Math.random() - 0.5) * (isOverInteractive ? 15 : 10);
+             createSparkle(mouseX + offsetX, mouseY + offsetY, isOverInteractive);
+        }
+    }, 45);
+
+    // --- Mouse Movement Effects (Tilt/Ambient) ---
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        const tiltMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        const tiltMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+        document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+        document.documentElement.style.setProperty('--tilt-x', `${tiltMouseX * 5}deg`);
+        document.documentElement.style.setProperty('--tilt-y', `${tiltMouseY * 5}deg`);
+        if (hasInteracted) { ambientLight.style.opacity = 0.7; }
+    });
+    document.addEventListener('mouseleave', () => { ambientLight.style.opacity = 0; });
+
+    // --- Rising Ember Effect ---
+     const createRisingFireParticles = () => {
+        const fireContainer = document.createElement('div');
+        fireContainer.className = 'fire-container';
+        document.body.appendChild(fireContainer);
+        setInterval(() => {
+            if (!hasInteracted) return;
+            if (Math.random() < 0.3) {
+                 const x = Math.random() * window.innerWidth;
+                 createRisingEmber(x, window.innerHeight, fireContainer);
             }
+        }, 250);
+    };
+    const createRisingEmber = (x, y, container) => {
+        const ember = document.createElement('div');
+        const size = Math.random() * 6 + 4; const duration = Math.random() * 4 + 3; const xMovement = (Math.random() - 0.5) * 150;
+        ember.className = 'ember-particle';
+        ember.style.cssText += `position: absolute; width: ${size}px; height: ${size}px; left: ${x}px; bottom: -${size}px; background: radial-gradient(circle, rgba(255, 200, 0, 0.8) 0%, rgba(255, 100, 50, 0.6) 50%, rgba(139, 0, 0, 0.4) 100%);`;
+        container.appendChild(ember);
+        gsap.to(ember, { bottom: '100vh', left: `+=${xMovement}`, opacity: 0, duration: duration, ease: 'power1.out', delay: Math.random() * 0.5, onComplete: () => ember.remove() });
+    };
 
-            function addMenuListeners() {
-                menuItems.forEach(item => {
-                    const highlight = item.querySelector('.highlight');
-                    
-                    item.addEventListener('mousemove', (e) => {
-                        const rect = item.getBoundingClientRect();
-                        const x = ((e.clientX - rect.left) / rect.width) * 100;
-                        const y = ((e.clientY - rect.top) / rect.height) * 100;
-                        
-                        highlight.style.setProperty('--x', `${x}%`);
-                        highlight.style.setProperty('--y', `${y}%`);
-                        
-                        gsap.to(item, { 
-                            scale: 1.02,
-                            duration: 0.3,
-                            ease: 'power2.out',
-                            color: 'var(--metallic-gold)',
-                           textShadow: '0 0 10px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.2)',
-                            boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(212, 175, 55, 0.1)'
-                        });
+    // --- Handle Interaction ---
+    const handleInteraction = () => {
+        if (hasInteracted) return;
+        hasInteracted = true;
 
-                        // Create ripple effect
-                        const ripple = document.createElement('div');
-                        ripple.style.position = 'absolute';
-                        ripple.style.background = 'radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%)';
-                        ripple.style.width = ripple.style.height = '100px';
-                        ripple.style.left = e.clientX - rect.left - 50 + 'px';
-                        ripple.style.top = e.clientY - rect.top - 50 + 'px';
-                        ripple.style.transform = 'scale(0)';
-                        ripple.style.pointerEvents = 'none';
-                        item.appendChild(ripple);
+        // 1. Hide Prompt
+        gsap.to(prompt, { opacity: 0, duration: 0.5, onComplete: () => prompt.style.display = 'none' });
 
-                        gsap.to(ripple, {
-                            scale: 3,
-                            opacity: 0,
-                            duration: 1,
-                            ease: 'power2.out',
-                            onComplete: () => ripple.remove()
-                        });
-                    });
-                    
-                    item.addEventListener('mouseleave', () => {
-                        gsap.to(item, { 
-                            scale: 1,
-                            duration: 0.3,
-                            ease: 'power2.out',
-                            color: 'var(--text-light)',
-                            textShadow: 'none',
-                            boxShadow: 'none'
-                        });
-                    });
-                    
-                    item.addEventListener('click', () => {
-                        // Only add active class for Exit button
-                        if (!item.getAttribute('href')) {
-                            menuItems.forEach(i => i.classList.remove('active'));
-                            item.classList.add('active');
-                        }
-                        
-                        // Enhanced click animation
-                        gsap.timeline()
-                            .to(item, {
-                                scale: 0.95,
-                                duration: 0.1,
-                                ease: 'power2.in'
-                            })
-                            .to(item, {
-                                scale: 1,
-                                duration: 0.5,
-                                ease: 'elastic.out(1, 0.5)'
-                            });
-
-                        // Create burst effect
-                        const burst = 8;
-                        const angleStep = (Math.PI * 2) / burst;
-                        
-                        for (let i = 0; i < burst; i++) {
-                            const particle = document.createElement('div');
-                            particle.style.position = 'absolute';
-                            particle.style.width = '2px';
-                            particle.style.height = '2px';
-                            particle.style.background = 'var(--metallic-gold)';
-                            particle.style.borderRadius = '50%';
-                            particle.style.pointerEvents = 'none';
-                            item.appendChild(particle);
-
-                            const angle = angleStep * i;
-                            const radius = 50;
-
-                            gsap.to(particle, {
-                                x: Math.cos(angle) * radius,
-                                y: Math.sin(angle) * radius,
-                                opacity: 0,
-                                duration: 0.5,
-                                ease: 'power2.out',
-                                onComplete: () => particle.remove()
-                            });
-                        }
-                        
-                        if (item.textContent.trim() === 'Exit') {
-                            window.close();
-                        }
-                    });
-                });
-            }
-
-            document.addEventListener('keydown', showMenu);
-            document.addEventListener('click', showMenu);
-            document.addEventListener('touchstart', showMenu);
-
-            addUltraPremiumEffects();
+        // 2. Animate Menu In & Enable Interaction
+         gsap.to(menu, {
+            opacity: 1, duration: 0.1,
+            onStart: () => { menu.style.pointerEvents = 'auto'; }
+        });
+        gsap.to(menuItems, {
+            opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)',
+            stagger: 0.2, duration: 1, ease: 'back.out(1.7)', delay: 0.2
         });
 
-        function addUltraPremiumEffects() {
-            const container = document.querySelector('.container');
-            const particleCount = Math.min(window.innerWidth / 40, 25);
+        // 3. Activate Menu Item Listeners (Hover/Highlight/Sparkle State + Click Animation)
+        menuItems.forEach(item => {
+            const highlight = item.querySelector('.highlight');
 
-            function createPremiumParticle() {
-                const particle = document.createElement('div');
-                particle.classList.add('premium-particle');
-                container.appendChild(particle);
-
-                const size = Math.random() * 4 + 1;
-                const startX = Math.random() * window.innerWidth;
-                const startY = window.innerHeight + 10;
-                const duration = Math.random() * 4 + 3;
-                const endX = startX + (Math.random() - 0.5) * 200;
-                const rotationSpeed = (Math.random() - 0.5) * 360;
-
-                gsap.set(particle, {
-                    x: startX,
-                    y: startY,
-                    width: size,
-                    height: size,
-                    opacity: 0,
-                    rotation: 0
-                });
-
-                gsap.to(particle, {
-                    x: endX,
-                    y: -10,
-                    opacity: size < 2 ? 0.8 : 0.5,
-                    rotation: rotationSpeed,
-                    duration: duration,
-                    ease: 'power1.out',
-                    onComplete: () => {
-                        particle.remove();
-                        createPremiumParticle();
-                    }
-                });
-            }
-
-            for (let i = 0; i < particleCount; i++) {
-                setTimeout(createPremiumParticle, Math.random() * 3000);
-            }
-
-            // Enhanced parallax effect
-            document.addEventListener('mousemove', (e) => {
-                const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-                const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-                
-                gsap.to('.premium-particle', {
-                    x: `+=${mouseX * 30}`,
-                    y: `+=${mouseY * 30}`,
-                    duration: 1,
-                    ease: 'power2.out'
-                });
-
-                gsap.to('.title', {
-                    x: mouseX * 10,
-                    y: mouseY * 10,
-                    duration: 1,
-                    ease: 'power2.out'
-                });
-
-                gsap.to('.side-ornament.left', {
-                    x: mouseX * 15,
-                    duration: 1,
-                    ease: 'power2.out'
-                });
-
-                gsap.to('.side-ornament.right', {
-                    x: -mouseX * 15,
-                    duration: 1,
-                    ease: 'power2.out'
-                });
+            // Hover for highlight dot
+            item.addEventListener('mousemove', (e) => {
+                const rect = item.getBoundingClientRect();
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                const xPercent = x / rect.width * 100; const yPercent = y / rect.height * 100;
+                highlight.style.setProperty('--x', `${xPercent}%`);
+                highlight.style.setProperty('--y', `${yPercent}%`);
             });
-        }
+
+            // Hover for sparkle state change
+            item.addEventListener('mouseenter', () => { isOverInteractive = true; });
+            item.addEventListener('mouseleave', () => { isOverInteractive = false; });
+
+            // Click Animation
+            item.addEventListener('click', (e) => {
+                // Ripple effect
+                const rect = item.getBoundingClientRect();
+                const ripple = document.createElement('div');
+                ripple.style.position = 'absolute';
+                ripple.style.background = 'radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, rgba(139,0,0,0.1) 70%, transparent 80%)';
+                ripple.style.width = ripple.style.height = '50px';
+                ripple.style.borderRadius = '50%';
+                ripple.style.left = e.clientX - rect.left - 25 + 'px';
+                ripple.style.top = e.clientY - rect.top - 25 + 'px';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.zIndex = '2';
+                item.appendChild(ripple);
+                gsap.to(ripple, { scale: 6, opacity: 0, duration: 0.8, ease: 'power2.out', onComplete: () => ripple.remove() });
+
+                // Burst effect
+                const burstCount = 8; const angleStep = (Math.PI * 2) / burstCount;
+                for (let i = 0; i < burstCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'absolute'; particle.style.width = '3px'; particle.style.height = '3px';
+                    particle.style.background = 'var(--metallic-gold)'; particle.style.borderRadius = '50%';
+                    particle.style.pointerEvents = 'none'; particle.style.left = '50%'; particle.style.top = '50%';
+                    particle.style.marginLeft = '-1.5px'; particle.style.marginTop = '-1.5px'; particle.style.zIndex = '2';
+                    item.appendChild(particle);
+                    const angle = angleStep * i; const radius = 60;
+                    gsap.to(particle, { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius, scale: 0, opacity: 0.5, duration: 0.6, ease: 'power1.out', onComplete: () => particle.remove() });
+                }
+
+                // Scale animation
+                gsap.timeline()
+                    .to(item, { scale: 0.97, duration: 0.1, ease: 'power2.in' })
+                    .to(item, { scale: 1, duration: 0.4, ease: 'back.out(1.4)' });
+
+                // Exit Logic
+                if (item.textContent.trim().toUpperCase() === 'EXIT') {
+                    window.close();
+                }
+            });
+        });
+
+        // 4. Initialize rising fire particles
+        createRisingFireParticles();
+
+        // 5. Remove initial interaction listeners
+        document.removeEventListener('keydown', handleInteraction);
+        document.removeEventListener('click', handleInteraction);
+        document.removeEventListener('touchstart', handleInteraction);
+    };
+
+    // --- Add Initial Interaction Listeners ---
+    document.addEventListener('keydown', handleInteraction);
+    document.addEventListener('click', handleInteraction);
+    document.addEventListener('touchstart', handleInteraction);
+
+    // Disable right-click
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+}); // End of DOMContentLoaded
     </script>
 </body>
 </html>
