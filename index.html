@@ -6,16 +6,19 @@
     <title>LX Menu</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-pure: #000000;
-            --blood-deep: #4A0000;
-            --blood-bright: #990000;
-            --ember: #ff3300;
-            --text-dim: #555555;
-            --text-hover: #EBEBEB;
-            --text-active: #FFFFFF;
+            --bg-pure: #020101;
+            --blood-deep: #2a0000;
+            --blood-bright: #ad0000;
+            --blood-glow: #ff1a1a;
+            --ember: #ff5500;
+            --gold-dark: #b8860b;
+            --gold-light: #ffd700;
+            --text-dim: #7a7a7a;
+            --text-hover: #f0f0f0;
+            --text-active: #ffffff;
         }
 
         * {
@@ -41,32 +44,54 @@
             inset: -5%;
             width: 110%;
             height: 110%;
-            background: radial-gradient(circle at 75% 50%, var(--blood-deep) 0%, var(--bg-pure) 55%);
-            opacity: 0.4;
+            background: radial-gradient(circle at 60% 40%, var(--blood-deep) 0%, var(--bg-pure) 60%);
             z-index: 0;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             will-change: transform;
+        }
+
+        .ambient-mist {
+            position: fixed;
+            width: 200vw;
+            height: 200vh;
+            top: -50vh;
+            left: -50vw;
+            background: radial-gradient(circle at center, rgba(173, 0, 0, 0.05) 0%, transparent 60%);
+            filter: blur(40px);
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .mist-1 { animation: drift 40s infinite alternate ease-in-out; }
+        .mist-2 { animation: drift 50s infinite alternate-reverse ease-in-out; transform: scale(1.2); }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(3vw, 3vh) scale(1.05); }
         }
 
         .omega-shadow {
             position: fixed;
-            right: -10vw;
+            right: -18vw;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 140vh;
-            color: var(--bg-pure);
-            text-shadow: 0 0 100px rgba(153, 0, 0, 0.15);
-            z-index: 1;
+            font-size: 180vh;
+            font-weight: 800;
+            background: linear-gradient(to bottom, #110000, var(--bg-pure));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 50px rgba(173, 0, 0, 0.2));
+            z-index: 2;
             pointer-events: none;
-            opacity: 0.8;
             user-select: none;
         }
 
         .cinematic-vignette {
             position: fixed;
             inset: 0;
-            background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.8) 75%, var(--bg-pure) 100%);
-            box-shadow: inset 0 0 200px rgba(0,0,0,0.9);
+            background: radial-gradient(circle at center, transparent 30%, rgba(2, 1, 1, 0.85) 80%, #000000 100%);
+            box-shadow: inset 0 0 250px rgba(0,0,0,0.95);
             pointer-events: none;
             z-index: 15;
         }
@@ -85,17 +110,17 @@
             border-radius: 50%;
             background: var(--ember);
             will-change: transform, opacity;
-            box-shadow: 0 0 8px var(--ember), 0 0 15px var(--blood-bright);
+            box-shadow: 0 0 10px var(--ember), 0 0 20px var(--blood-bright);
         }
 
         .ash {
-            background: #2a2a2a;
-            box-shadow: none;
+            background: #1a1a1a;
+            box-shadow: 0 0 5px #000;
         }
 
         .ui-container {
             position: absolute;
-            left: 12%;
+            left: 10%;
             top: 50%;
             transform: translateY(-50%);
             z-index: 20;
@@ -107,31 +132,47 @@
         .title-wrapper {
             position: relative;
             opacity: 0;
-            transform: translateY(20px);
         }
 
         .main-title {
-            font-size: clamp(2rem, 5vw, 4.5rem);
-            font-weight: 400;
-            color: var(--text-hover);
-            letter-spacing: 0.3em;
+            font-size: clamp(3rem, 7vw, 6.5rem);
+            font-weight: 700;
+            background: linear-gradient(180deg, #ffffff 0%, #d4d4d4 40%, #737373 80%, #2e2e2e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            filter: drop-shadow(0 0 30px rgba(173, 0, 0, 0.8));
             position: relative;
+            will-change: transform, opacity, filter, letter-spacing;
+        }
+
+        .main-title::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            background: linear-gradient(180deg, var(--gold-light) 0%, var(--blood-bright) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.3;
+            filter: blur(12px);
         }
 
         .title-separator {
             width: 0;
-            height: 1px;
-            background: linear-gradient(90deg, var(--blood-bright), transparent);
-            margin-top: 1rem;
-            box-shadow: 0 0 10px var(--blood-bright);
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold-light), var(--blood-bright), transparent);
+            margin-top: 1.5rem;
+            box-shadow: 0 0 15px var(--blood-glow), 0 0 5px var(--gold-light);
+            opacity: 0.8;
         }
 
         .menu-list {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 2rem;
             list-style: none;
             opacity: 0;
         }
@@ -142,35 +183,34 @@
         }
 
         .menu-link {
-            display: inline-block;
+            display: flex;
+            align-items: center;
             font-family: 'Cinzel', serif;
-            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
             font-weight: 500;
             color: var(--text-dim);
             text-decoration: none;
             text-transform: uppercase;
-            letter-spacing: 0.4em;
+            letter-spacing: 0.5em;
             padding: 0.5rem 0;
             cursor: pointer;
             background: transparent;
             border: none;
             outline: none;
-            transition: color 0.4s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 0.4s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
 
         .menu-link::before {
-            content: '';
+            content: '♦';
             position: absolute;
-            left: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 4px;
-            background-color: var(--blood-bright);
-            border-radius: 50%;
+            left: -30px;
+            font-size: 0.8em;
+            color: var(--blood-bright);
             opacity: 0;
-            transition: opacity 0.3s ease, left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            box-shadow: 0 0 10px var(--blood-bright);
+            transform: translateX(-10px) rotate(45deg);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-shadow: 0 0 15px var(--blood-glow);
         }
 
         .blade-slash {
@@ -178,25 +218,27 @@
             bottom: 0;
             left: 0;
             width: 0%;
-            height: 1px;
-            background: linear-gradient(90deg, var(--blood-bright), var(--ember), transparent);
-            box-shadow: 0 0 8px var(--ember);
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold-light), var(--blood-glow), transparent);
+            box-shadow: 0 0 12px var(--ember);
             transition: width 0.5s cubic-bezier(0.21, 0.83, 0.26, 1);
             pointer-events: none;
         }
 
         .menu-link:hover, .menu-link:focus {
             color: var(--text-active);
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 40px rgba(173, 0, 0, 0.6);
+            letter-spacing: 0.6em;
+            transform: translateX(10px);
         }
 
         .menu-link:hover::before {
             opacity: 1;
-            left: -15px;
+            transform: translateX(0) rotate(0deg);
         }
 
         .menu-link:hover .blade-slash {
-            width: 100%;
+            width: 120%;
         }
 
         .prompt-container {
@@ -207,30 +249,31 @@
             justify-content: center;
             z-index: 50;
             background: var(--bg-pure);
-            transition: opacity 1s ease;
+            transition: opacity 0.8s ease;
         }
 
         .prompt-text {
-            font-size: 1.1rem;
-            letter-spacing: 0.5em;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 0.6em;
             color: var(--text-dim);
             text-transform: uppercase;
-            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            animation: breathe 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; text-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
+        @keyframes breathe {
+            0%, 100% { opacity: 0.4; filter: blur(1px); }
+            50% { opacity: 1; filter: blur(0px); text-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 10px var(--blood-deep); }
         }
 
         .screen-flash {
             position: fixed;
             inset: 0;
-            background: var(--blood-bright);
+            background: radial-gradient(circle at center, var(--blood-glow), var(--bg-pure));
             z-index: 100;
             opacity: 0;
             pointer-events: none;
-            mix-blend-mode: overlay;
+            mix-blend-mode: color-dodge;
         }
 
         @media screen and (max-width: 768px) {
@@ -238,9 +281,17 @@
                 left: 50%;
                 transform: translate(-50%, -50%);
                 align-items: center;
+                gap: 3rem;
+            }
+            .main-title {
+                text-align: center;
             }
             .title-separator {
-                background: radial-gradient(circle, var(--blood-bright), transparent 80%);
+                background: radial-gradient(circle, var(--blood-bright), var(--ember), transparent 80%);
+                height: 1px;
+                left: 50%;
+                transform: translateX(-50%);
+                position: relative;
             }
             .menu-list {
                 align-items: center;
@@ -253,13 +304,16 @@
                 left: 50%;
                 transform: translateX(-50%);
             }
+            .menu-link:hover {
+                transform: translateY(-2px);
+                letter-spacing: 0.6em;
+            }
             .menu-link:hover .blade-slash {
-                width: 80%;
+                width: 100%;
             }
             .omega-shadow {
-                right: 50%;
-                transform: translate(50%, -50%);
-                font-size: 80vh;
+                right: -25vw;
+                font-size: 100vh;
                 opacity: 0.3;
             }
         }
@@ -267,6 +321,8 @@
 </head>
 <body>
     <div class="background-layer"></div>
+    <div class="ambient-mist mist-1"></div>
+    <div class="ambient-mist mist-2"></div>
     <div class="omega-shadow">Ω</div>
     <div class="particles-container"></div>
     <div class="cinematic-vignette"></div>
@@ -278,7 +334,7 @@
 
     <div class="ui-container">
         <div class="title-wrapper">
-            <h1 class="main-title">LX Menu</h1>
+            <h1 class="main-title" data-text="LX Menu">LX Menu</h1>
             <div class="title-separator"></div>
         </div>
 
@@ -315,15 +371,12 @@
             const promptContainer = document.querySelector('.prompt-container');
             
             let isStarted = false;
-            let mouseX = window.innerWidth / 2;
-            let mouseY = window.innerHeight / 2;
 
-            // Particle System (Optimized & Mature)
             const createParticles = () => {
-                const particleCount = 45; // Low count for sleekness
+                const particleCount = 50;
                 
                 for (let i = 0; i < particleCount; i++) {
-                    const isAsh = Math.random() > 0.3;
+                    const isAsh = Math.random() > 0.4;
                     const p = document.createElement('div');
                     p.classList.add('particle');
                     if (isAsh) p.classList.add('ash');
@@ -349,8 +402,8 @@
                 const startY = isInitial ? gsap.utils.random(0, window.innerHeight) : window.innerHeight + 50;
                 const endY = -50;
                 const startX = gsap.utils.random(-100, window.innerWidth + 100);
-                const driftX = gsap.utils.random(-150, 150); // Gentle horizontal drift
-                const duration = gsap.utils.random(12, 25); // Slow, floating feeling
+                const driftX = gsap.utils.random(-150, 150);
+                const duration = gsap.utils.random(12, 28);
 
                 gsap.fromTo(p, 
                     { 
@@ -361,7 +414,7 @@
                     { 
                         y: endY, 
                         x: startX + driftX, 
-                        rotation: `+=${gsap.utils.random(-90, 90)}`,
+                        rotation: `+=${gsap.utils.random(-180, 180)}`,
                         duration: duration,
                         ease: "none",
                         onComplete: () => animateParticle(p)
@@ -371,11 +424,9 @@
 
             createParticles();
 
-            // Subtle Parallax (No aggressive shaking)
             window.addEventListener('mousemove', (e) => {
                 if (!isStarted) return;
                 
-                // Smooth interpolation for mouse position
                 const targetX = (e.clientX / window.innerWidth - 0.5) * 20;
                 const targetY = (e.clientY / window.innerHeight - 0.5) * 20;
 
@@ -387,41 +438,37 @@
                 });
 
                 gsap.to(omega, {
-                    x: -targetX * 2,
-                    y: -targetY * 2,
-                    duration: 3,
+                    x: -targetX * 0.4,
+                    y: -targetY * 0.4,
+                    duration: 2.5,
                     ease: "power2.out"
                 });
             }, { passive: true });
 
-            // Interactive elements
             const menuLinks = document.querySelectorAll('.menu-link');
             
             menuLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     const isExit = link.classList.contains('action-exit');
                     
-                    // Subtle click reaction
                     gsap.to(link, {
-                        scale: 0.98,
+                        scale: 0.95,
                         duration: 0.1,
                         yoyo: true,
                         repeat: 1
                     });
 
-                    // Quick cinematic red flash on click
                     gsap.fromTo('.screen-flash', 
-                        { opacity: 0.15 }, 
+                        { opacity: 0.2 }, 
                         { opacity: 0, duration: 0.6, ease: "power2.out" }
                     );
 
                     if (isExit) {
                         e.preventDefault();
-                        // Cinematic fade out sequence
                         const tl = gsap.timeline();
-                        tl.to('.ui-container', { x: -50, opacity: 0, duration: 0.8, ease: "power2.in" }, 0)
-                          .to('.background-layer, .omega-shadow, .particles-container', { opacity: 0, duration: 1.5, ease: "power2.inOut" }, 0.2)
-                          .to(document.body, { backgroundColor: '#000', duration: 1 }, 0.5)
+                        tl.to('.ui-container', { x: -100, opacity: 0, filter: "blur(10px)", duration: 0.8, ease: "power3.in" }, 0)
+                          .to('.background-layer, .ambient-mist, .omega-shadow, .particles-container', { opacity: 0, scale: 1.05, duration: 1.2, ease: "power2.inOut" }, 0.2)
+                          .to(document.body, { backgroundColor: '#000', duration: 0.8 }, 0.5)
                           .add(() => {
                               window.open('','_self',''); 
                               window.close();
@@ -430,69 +477,80 @@
                 });
             });
 
-            // Start Sequence
             const igniteMenu = () => {
                 if (isStarted) return;
                 isStarted = true;
 
-                // Remove event listeners
                 window.removeEventListener('keydown', igniteMenu);
                 window.removeEventListener('click', igniteMenu);
                 window.removeEventListener('touchstart', igniteMenu);
 
                 const tl = gsap.timeline();
 
-                // Fade out prompt
                 tl.to(promptContainer, {
                     opacity: 0,
-                    duration: 0.8,
+                    filter: "blur(10px)",
+                    scale: 1.1,
+                    duration: 0.5,
                     ease: "power2.inOut",
                     onComplete: () => promptContainer.remove()
                 }, 0);
 
-                // Flash effect for impact
                 tl.fromTo('.screen-flash', 
-                    { opacity: 0.3 }, 
-                    { opacity: 0, duration: 1.5, ease: "power3.out" }, 
-                0.5);
+                    { opacity: 0.4 }, 
+                    { opacity: 0, duration: 1.2, ease: "power3.out" }, 
+                0.2);
 
-                // Reveal Title
                 tl.to('.title-wrapper', {
                     opacity: 1,
-                    y: 0,
-                    duration: 1.2,
+                    duration: 0.1
+                }, 0.2);
+
+                tl.fromTo('.main-title',
+                    { 
+                        opacity: 0, 
+                        scale: 1.1, 
+                        filter: "blur(10px)", 
+                        letterSpacing: "0.1em" 
+                    },
+                    { 
+                        opacity: 1, 
+                        scale: 1, 
+                        filter: "blur(0px)", 
+                        letterSpacing: "0.2em", 
+                        duration: 1.2, 
+                        ease: "power3.out" 
+                    }, 
+                0.2);
+
+                tl.to('.title-separator', {
+                    width: window.innerWidth > 768 ? '180px' : '80%',
+                    duration: 0.8,
                     ease: "power3.out"
                 }, 0.8);
 
-                tl.to('.title-separator', {
-                    width: window.innerWidth > 768 ? '150px' : '80%',
-                    duration: 1.5,
-                    ease: "power4.out"
-                }, 1.2);
-
-                // Reveal Menu Items
                 tl.to('.menu-list', {
                     opacity: 1,
-                    duration: 0.5
-                }, 1.4);
+                    duration: 0.1
+                }, 0.9);
 
                 tl.fromTo('.menu-item', 
-                    { opacity: 0, x: -20 }, 
+                    { opacity: 0, x: -30, filter: "blur(5px)" }, 
                     { 
                         opacity: 1, 
                         x: 0, 
+                        filter: "blur(0px)",
                         duration: 0.8, 
-                        stagger: 0.15, 
-                        ease: "power2.out" 
+                        stagger: 0.1, 
+                        ease: "power3.out" 
                     }, 
-                1.4);
+                0.9);
             };
 
             window.addEventListener('keydown', igniteMenu);
             window.addEventListener('click', igniteMenu);
             window.addEventListener('touchstart', igniteMenu, { passive: true });
             
-            // Prevent context menu
             window.addEventListener('contextmenu', e => e.preventDefault());
         });
     </script>
