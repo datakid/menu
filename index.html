@@ -3,617 +3,498 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>lx menu legacy</title>
+    <title>LX Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;700&family=Raleway:wght@200;400;600&family=Cinzel:wght@400;700;900&display=swap');
+        :root {
+            --bg-pure: #000000;
+            --blood-deep: #4A0000;
+            --blood-bright: #990000;
+            --ember: #ff3300;
+            --text-dim: #555555;
+            --text-hover: #EBEBEB;
+            --text-active: #FFFFFF;
+        }
 
-:root {
-    --bg-dark: #050505;
-    --metallic-red: #8B0000;
-    --metallic-gold: #D4AF37;
-    --metallic-silver: #C0C0C0;
-    --metallic-platinum: #E5E4E2;
-    --metallic-bronze: #CD7F32;
-    --text-light: #F8F8F8;
-    --premium-gradient: linear-gradient(135deg, rgba(192, 192, 192, 0.98) 0%, rgba(212, 175, 55, 1) 50%, rgba(139, 0, 0, 0.98) 100%);
-    --ultra-premium-gradient: linear-gradient(135deg, rgba(229, 228, 226, 0.92) 0%, var(--metallic-gold) 30%, var(--metallic-red) 55%, var(--metallic-gold) 75%, var(--metallic-bronze) 100%);
-    --mouse-x: 50%;
-    --mouse-y: 50%;
-    --tilt-x: 0deg;
-    --tilt-y: 0deg;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-pure);
+            font-family: 'Cinzel', serif;
+            color: var(--text-dim);
+            overflow: hidden;
+            cursor: default;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-body, html {
-    height: 100%;
-    min-height: 100vh;
-    background-color: var(--bg-dark);
-    font-family: 'Raleway', sans-serif;
-    color: var(--text-light);
-    overflow: hidden;
-    position: relative;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    perspective: 1200px;
-    cursor: default;
-}
+        .background-layer {
+            position: fixed;
+            inset: -5%;
+            width: 110%;
+            height: 110%;
+            background: radial-gradient(circle at 75% 50%, var(--blood-deep) 0%, var(--bg-pure) 55%);
+            opacity: 0.4;
+            z-index: 0;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
 
-.container {
-    position: relative;
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(192, 192, 192, 0.18) 0%, transparent 40%), var(--bg-dark);
-    box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.7), inset 0 0 50px rgba(139, 0, 0, 0.12), inset 0 0 30px rgba(212, 175, 55, 0.12);
-    transition: background 0.8s ease-out;
-    transform-style: preserve-3d;
-    z-index: 1;
-    overflow: hidden;
-}
+        .omega-shadow {
+            position: fixed;
+            right: -10vw;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 140vh;
+            color: var(--bg-pure);
+            text-shadow: 0 0 100px rgba(153, 0, 0, 0.15);
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.8;
+            user-select: none;
+        }
 
-.container::before, .container::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: -1;
-    background-size: 200% 200%;
-    animation: bgGradientShift 45s ease-in-out infinite alternate;
-    will-change: background-position, opacity;
-}
+        .cinematic-vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.8) 75%, var(--bg-pure) 100%);
+            box-shadow: inset 0 0 200px rgba(0,0,0,0.9);
+            pointer-events: none;
+            z-index: 15;
+        }
 
-.container::before {
-    background-image: linear-gradient(135deg, rgba(139, 0, 0, 0.12) 0%, transparent 70%);
-}
+        .particles-container {
+            position: fixed;
+            inset: -10%;
+            width: 120%;
+            height: 120%;
+            pointer-events: none;
+            z-index: 5;
+        }
 
-.container::after {
-    background-image: linear-gradient(225deg, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
-    animation-delay: -22.5s;
-}
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--ember);
+            will-change: transform, opacity;
+            box-shadow: 0 0 8px var(--ember), 0 0 15px var(--blood-bright);
+        }
 
-@keyframes bgGradientShift {
-    0% { background-position: 0% 0%; opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { background-position: 100% 100%; opacity: 0.6;}
-}
+        .ash {
+            background: #2a2a2a;
+            box-shadow: none;
+        }
 
-.metallic-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(45deg, rgba(192, 192, 192, 0.03) 25%, rgba(212, 175, 55, 0.02) 50%, rgba(139, 0, 0, 0.03) 75%),
-                linear-gradient(-45deg, rgba(212, 175, 55, 0.03) 25%, rgba(192, 192, 192, 0.02) 50%, rgba(139, 0, 0, 0.03) 75%);
-    background-size: 6px 6px;
-    opacity: 0.40;
-    mix-blend-mode: soft-light;
-    pointer-events: none;
-    animation: overlayShift 30s linear infinite;
-    filter: contrast(110%) brightness(110%);
-    z-index: -2;
-    will-change: background-position;
-    transform: translateZ(0);
-}
+        .ui-container {
+            position: absolute;
+            left: 12%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
 
-.grain-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iLjA4IiBkPSJNMCAwaDMwMHYzMDBIMHoiLz48L3N2Zz4=');
-    mix-blend-mode: overlay;
-    pointer-events: none;
-    z-index: -2;
-    transform: translateZ(0);
-}
+        .title-wrapper {
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+        }
 
-@keyframes overlayShift {
-    0% { background-position: 0 0; }
-    100% { background-position: 120px 120px; }
-}
+        .main-title {
+            font-size: clamp(2rem, 5vw, 4.5rem);
+            font-weight: 400;
+            color: var(--text-hover);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
 
-.title-container {
-    position: relative;
-    margin: clamp(2rem, 8vh, 4rem) 0;
-    width: 100%;
-    text-align: center;
-    filter: drop-shadow(0 0 35px rgba(212, 175, 55, 0.25));
-    transition: opacity 1.5s ease;
-    z-index: 2;
-    transform: translateZ(0);
-}
+        .title-separator {
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--blood-bright), transparent);
+            margin-top: 1rem;
+            box-shadow: 0 0 10px var(--blood-bright);
+        }
 
-.logo-glow {
-    position: absolute;
-    top: 50%; left: 50%; width: 90%; height: 100%;
-    background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.2) 0%, rgba(139, 0, 0, 0.15) 40%, transparent 80%);
-    transform: translate(-50%, -50%);
-    filter: blur(40px);
-    z-index: -1;
-    pointer-events: none;
-    animation: logoGlow 8s ease-in-out infinite alternate;
-    will-change: transform, opacity;
-}
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            list-style: none;
+            opacity: 0;
+        }
 
-@keyframes logoGlow {
-    0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.85); }
-    100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.15); }
-}
+        .menu-item {
+            position: relative;
+            width: fit-content;
+        }
 
-.title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(2.5rem, 10vw, 7rem);
-    font-weight: 900;
-    letter-spacing: clamp(0.1em, 1.5vw, 0.18em);
-    text-align: center;
-    background: var(--ultra-premium-gradient);
-    background-size: 250% 250%;
-    animation: shimmer 10s ease-in-out infinite alternate;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 5px rgba(255, 223, 186, 0.3), 0 0 15px rgba(212, 175, 55, 0.40), 0 0 30px rgba(212, 175, 55, 0.20), 0 0 50px rgba(139, 0, 0, 0.30);
-    padding: 0 1rem;
-    position: relative;
-    text-transform: uppercase;
-    will-change: background-position;
-}
+        .menu-link {
+            display: inline-block;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-weight: 500;
+            color: var(--text-dim);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            outline: none;
+            transition: color 0.4s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 0.4s ease;
+        }
 
-.title-emboss {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, transparent 40%, transparent 60%, rgba(0, 0, 0, 0.2) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    mix-blend-mode: overlay;
-    pointer-events: none;
-    opacity: 0.8;
-}
+        .menu-link::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            background-color: var(--blood-bright);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease, left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 10px var(--blood-bright);
+        }
 
-.title::before, .title::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    width: min(80%, 700px);
-    height: 2.5px;
-    background: linear-gradient(90deg, transparent 0%, rgba(229, 228, 226, 0.15) 20%, var(--metallic-gold) 50%, rgba(229, 228, 226, 0.15) 80%, transparent 100%);
-    filter: drop-shadow(0 0 12px var(--metallic-gold)) drop-shadow(0 0 6px var(--metallic-gold));
-    transform: translateX(-50%);
-    border-radius: 2px;
-    will-change: width, opacity, filter;
-}
+        .blade-slash {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background: linear-gradient(90deg, var(--blood-bright), var(--ember), transparent);
+            box-shadow: 0 0 8px var(--ember);
+            transition: width 0.5s cubic-bezier(0.21, 0.83, 0.26, 1);
+            pointer-events: none;
+        }
 
-.title::before { top: -25px; animation: linePulse 6s ease-in-out infinite alternate; }
-.title::after { bottom: -25px; animation: linePulse 6s ease-in-out infinite alternate-reverse; }
+        .menu-link:hover, .menu-link:focus {
+            color: var(--text-active);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
 
-@keyframes linePulse {
-    0% { width: min(65%, 500px); opacity: 0.7; filter: drop-shadow(0 0 8px var(--metallic-gold)) drop-shadow(0 0 4px var(--metallic-gold)); }
-    50% { opacity: 0.95; }
-    100% { width: min(80%, 700px); opacity: 0.8; filter: drop-shadow(0 0 15px var(--metallic-gold)) drop-shadow(0 0 8px var(--metallic-gold)); }
-}
+        .menu-link:hover::before {
+            opacity: 1;
+            left: -15px;
+        }
 
-@keyframes shimmer {
-    0% { background-position: 0% 50%; }
-    25% { background-position: 100% 25%; }
-    50% { background-position: 0% 100%; }
-    75% { background-position: 100% 75%; }
-    100% { background-position: 0% 50%; }
-}
+        .menu-link:hover .blade-slash {
+            width: 100%;
+        }
 
-.menu {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1rem, 4vh, 2.5rem);
-    padding: 1rem;
-    width: min(100%, 600px);
-    position: relative;
-    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.35));
-    transform-style: preserve-3d;
-    opacity: 0;
-    z-index: 10;
-    pointer-events: none;
-}
+        .prompt-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            background: var(--bg-pure);
+            transition: opacity 1s ease;
+        }
 
-.menu-item {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.2rem, 4vw, 2.5rem);
-    color: var(--text-light);
-    text-decoration: none;
-    padding: clamp(0.8rem, 2vh, 1.5rem) clamp(1.5rem, 4vw, 3rem);
-    position: relative;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    text-transform: uppercase;
-    letter-spacing: max(4px, 0.2em);
-    text-align: center;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.4), rgba(192, 192, 192, 0.08), rgba(0, 0, 0, 0.4));
-    border-radius: 3px;
-    overflow: hidden;
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(212, 175, 55, 0.25);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.08), inset 0 0 8px rgba(212, 175, 55, 0.04);
-    transform-style: preserve-3d;
-    transform: translateY(30px) rotateX(15deg) scale(0.95);
-    filter: blur(8px);
-    cursor: pointer;
-    will-change: transform, color, box-shadow, border-color;
-}
+        .prompt-text {
+            font-size: 1.1rem;
+            letter-spacing: 0.5em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
 
-.menu-item::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -120%; width: 80%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(229, 228, 226, 0.2), rgba(212, 175, 55, 0.30), rgba(139, 0, 0, 0.25), rgba(212, 175, 55, 0.30), rgba(229, 228, 226, 0.2), transparent);
-    transition: transform 0.85s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease;
-    transform: skewX(-20deg) translateZ(0);
-    filter: blur(5px);
-    opacity: 0;
-    z-index: 1;
-    will-change: transform, opacity;
-}
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; text-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
+        }
 
-.menu-item:hover::before { transform: translateX(250%) skewX(-20deg) translateZ(0); opacity: 0.7; }
+        .screen-flash {
+            position: fixed;
+            inset: 0;
+            background: var(--blood-bright);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
 
-.menu-item::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 50%; width: 0; height: 2.5px;
-    background: linear-gradient(90deg, var(--metallic-gold), var(--metallic-red), var(--metallic-platinum), var(--metallic-red), var(--metallic-gold));
-    background-size: 200% 100%;
-    transition: width 0.4s cubic-bezier(0.645, 0.045, 0.355, 1), background-position 0.8s ease;
-    transform: translateX(-50%) translateZ(0);
-    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.85));
-    border-radius: 1px;
-    will-change: width, background-position;
-}
-
-.menu-item:hover::after { width: 95%; background-position: -100% 0; }
-
-.menu-item .highlight {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none;
-    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(139, 0, 0, 0.25) 0%, rgba(212, 175, 55, 0.35) 50%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.6s ease;
-    mix-blend-mode: soft-light;
-    box-shadow: inset 0 0 35px rgba(212, 175, 55, 0.15);
-    z-index: 1;
-    will-change: opacity;
-}
-
-.menu-item .inner-border {
-    position: absolute;
-    top: 5px; left: 5px; right: 5px; bottom: 5px;
-    border: 1px solid rgba(212, 175, 55, 0.25);
-    pointer-events: none;
-    box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.1);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 0;
-    will-change: opacity;
-}
-
-.menu-item:hover .inner-border, .menu-item:hover .highlight { opacity: 1; }
-
-.menu-item:hover {
-    color: var(--metallic-platinum);
-    transform: translateY(-5px) translateZ(15px) scale(1.02);
-    text-shadow: 0 0 10px rgba(229, 228, 226, 0.5), 0 0 25px rgba(212, 175, 55, 0.55), 0 0 45px rgba(139, 0, 0, 0.35);
-    background: linear-gradient(90deg, rgba(139, 0, 0, 0.25), rgba(212, 175, 55, 0.30), rgba(139, 0, 0, 0.25));
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 0, 0, 0.4), 0 0 35px rgba(212, 175, 55, 0.45), inset 0 1px 1px rgba(229,228,226,0.1), inset 0 0 25px rgba(212, 175, 55, 0.22);
-    border-color: rgba(212, 175, 55, 0.4);
-}
-
-.side-ornament {
-    position: fixed;
-    top: 50%; transform: translateY(-50%);
-    width: 2px; height: 70vh;
-    opacity: 0.7; display: none;
-    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
-    z-index: 1; pointer-events: none;
-}
-
-.side-ornament::before {
-    content: ''; position: absolute; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.6), rgba(139, 0, 0, 0.8), rgba(212, 175, 55, 0.6), transparent);
-    animation: ornamentGlow 4s infinite alternate;
-    box-shadow: 0 0 12px rgba(212, 175, 55, 0.35), 0 0 25px rgba(139, 0, 0, 0.25);
-    will-change: opacity, filter;
-}
-
-@keyframes ornamentGlow { 0% { opacity: 0.6; filter: blur(2px); } 100% { opacity: 0.9; filter: blur(3.5px); } }
-
-.ornament-detail {
-    position: absolute; width: 16px; height: 16px;
-    border: 1px solid rgba(212, 175, 55, 0.6); border-radius: 50%;
-    left: 50%; transform: translateX(-50%);
-    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.6));
-    animation: pulseDetail 5s ease-in-out infinite;
-    will-change: transform, opacity; pointer-events: none;
-}
-
-@keyframes pulseDetail { 0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.8; } 50% { transform: translateX(-50%) scale(1.08); opacity: 1; } }
-
-.ornament-detail.top { top: 5%; animation-delay: 0s; }
-.ornament-detail.middle { top: 50%; animation-delay: 0.5s; }
-.ornament-detail.bottom { bottom: 5%; animation-delay: 1s; }
-.ornament-detail::before {
-    content: ''; position: absolute; top: 50%; left: 50%;
-    width: 6px; height: 6px; background: var(--metallic-gold);
-    border-radius: 50%; transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px rgba(212, 175, 55, 1);
-}
-
-@media (min-width: 768px) { .side-ornament { display: block; } }
-.side-ornament.left { left: 5vw; transform: translateY(-50%) rotateY(var(--tilt-x)); }
-.side-ornament.right { right: 5vw; transform: translateY(-50%) rotateY(calc(-1 * var(--tilt-x))); }
-
-.corner-ornament { position: fixed; width: 100px; height: 100px; pointer-events: none; opacity: 0.5; z-index: 1; }
-.corner-ornament::before { content: ''; position: absolute; width: 1px; height: 100%; background: linear-gradient(to bottom, var(--metallic-gold), transparent); box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
-.corner-ornament::after { content: ''; position: absolute; width: 100%; height: 1px; background: linear-gradient(to right, var(--metallic-gold), transparent); box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
-.corner-ornament.top-left { top: 20px; left: 20px; }
-.corner-ornament.top-right { top: 20px; right: 20px; transform: scaleX(-1); }
-.corner-ornament.bottom-left { bottom: 20px; left: 20px; transform: scaleY(-1); }
-.corner-ornament.bottom-right { bottom: 20px; right: 20px; transform: scale(-1); }
-
-.prompt {
-    position: fixed; bottom: clamp(1.5rem, 5vh, 3rem); font-size: clamp(0.8rem, 2.5vw, 1.2rem);
-    color: var(--text-light); opacity: 0.65; text-transform: uppercase;
-    letter-spacing: 3px; animation: pulse 2.5s infinite; text-align: center;
-    width: 100%; padding: 0 1rem;
-    text-shadow: 0 0 18px rgba(212, 175, 55, 0.35), 0 0 35px rgba(139, 0, 0, 0.25);
-    display: block; z-index: 10; pointer-events: none; will-change: opacity, text-shadow;
-}
-
-@keyframes pulse { 0%, 100% { opacity: 0.7; text-shadow: 0 0 15px rgba(212, 175, 55, 0.4); } 50% { opacity: 0.45; text-shadow: 0 0 22px rgba(139, 0, 0, 0.35), 0 0 10px rgba(212,175,55,0.2); } }
-
-.ambient-light {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(ellipse at var(--mouse-x) var(--mouse-y), rgba(212, 175, 55, 0.05) 0%, transparent 70%);
-    pointer-events: none; mix-blend-mode: screen; z-index: 0;
-    opacity: 0; transition: opacity 0.5s ease; will-change: opacity;
-}
-
-.sparkle-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 5; }
-.sparkle-particle { position: absolute; border-radius: 50%; pointer-events: none; opacity: 0; transform-origin: center center; will-change: transform, opacity; }
-.fire-container { position: fixed; bottom: 0; left: 0; width: 100%; height: 100px; pointer-events: none; z-index: -1; overflow: visible; }
-.ember-particle { position: absolute; border-radius: 50%; z-index: -1; transform-origin: center bottom; will-change: transform, opacity; opacity: 0; }
-.click-ripple { position: absolute; border-radius: 50%; pointer-events: none; z-index: 2; will-change: transform, opacity; opacity: 0; }
-.click-burst { position: absolute; border-radius: 50%; pointer-events: none; z-index: 2; will-change: transform, opacity; opacity: 0; }
-
-@media screen and (max-width: 1024px) { .menu { width: 90%; } .menu-item { font-size: clamp(0.9rem, 2.5vw, 1.8rem); } }
-@media screen and (max-width: 768px) { .title { font-size: clamp(1.8rem, 6vw, 4rem); } .menu-item { font-size: clamp(0.8rem, 2.2vw, 1.6rem); padding: clamp(0.5rem, 1.2vh, 0.8rem) clamp(0.8rem, 2.5vw, 1.5rem); } .side-ornament { display: none; } }
-@media screen and (max-width: 480px) { .container { padding: 0.5rem; } .title { font-size: clamp(1.5rem, 5vw, 3rem); } .menu { width: 95%; gap: clamp(0.3rem, 1.5vh, 1rem); } .menu-item { font-size: clamp(0.7rem, 2vw, 1.4rem); padding: clamp(0.4rem, 1vh, 0.7rem) clamp(0.6rem, 2vw, 1.2rem); } .corner-ornament { width: 60px; height: 60px; } }
-@media screen and (max-height: 600px) { .container { justify-content: flex-start; padding-top: 0.5rem; } .title-container { margin-bottom: 0.5rem; } .menu { max-height: calc(100vh - 100px); overflow-y: auto; } .menu-item { padding: clamp(0.3rem, 0.8vh, 0.6rem) clamp(0.5rem, 1.5vw, 1rem); } }
+        @media screen and (max-width: 768px) {
+            .ui-container {
+                left: 50%;
+                transform: translate(-50%, -50%);
+                align-items: center;
+            }
+            .title-separator {
+                background: radial-gradient(circle, var(--blood-bright), transparent 80%);
+            }
+            .menu-list {
+                align-items: center;
+            }
+            .menu-link::before {
+                display: none;
+            }
+            .blade-slash {
+                background: linear-gradient(90deg, transparent, var(--blood-bright), transparent);
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .menu-link:hover .blade-slash {
+                width: 80%;
+            }
+            .omega-shadow {
+                right: 50%;
+                transform: translate(50%, -50%);
+                font-size: 80vh;
+                opacity: 0.3;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="metallic-overlay"></div>
-    <div class="grain-overlay"></div>
-    <div class="ambient-light"></div>
-    <div class="sparkle-container"></div>
-    <div class="fire-container"></div>
+    <div class="background-layer"></div>
+    <div class="omega-shadow">Ω</div>
+    <div class="particles-container"></div>
+    <div class="cinematic-vignette"></div>
+    <div class="screen-flash"></div>
 
-    <div class="container">
-        <div class="corner-ornament top-left"></div>
-        <div class="corner-ornament top-right"></div>
-        <div class="corner-ornament bottom-left"></div>
-        <div class="corner-ornament bottom-right"></div>
+    <div class="prompt-container">
+        <div class="prompt-text">Press Any Key</div>
+    </div>
 
-        <div class="side-ornament left">
-            <div class="ornament-detail top"></div>
-            <div class="ornament-detail middle"></div>
-            <div class="ornament-detail bottom"></div>
-        </div>
-        <div class="side-ornament right">
-            <div class="ornament-detail top"></div>
-            <div class="ornament-detail middle"></div>
-            <div class="ornament-detail bottom"></div>
+    <div class="ui-container">
+        <div class="title-wrapper">
+            <h1 class="main-title">LX Menu</h1>
+            <div class="title-separator"></div>
         </div>
 
-        <div class="title-container">
-            <div class="logo-glow"></div>
-            <h1 class="title">LX Menu</h1>
-            <div class="title-emboss"></div>
-        </div>
-
-        <nav class="menu">
-            <a class="menu-item" href="https://finalapp-nine.vercel.app/" target="_blank">
-                <div class="highlight"></div>
-                <div class="inner-border"></div>
-                New Form
-            </a>
-            <a class="menu-item" href="https://dashboard2-iota.vercel.app/" target="_blank">
-                <div class="highlight"></div>
-                <div class="inner-border"></div>
-                Load Form
-            </a>
-            <a class="menu-item">
-                <div class="highlight"></div>
-                <div class="inner-border"></div>
-                Exit
-            </a>
-        </nav>
-
-        <div class="prompt">Press Any Key to Start</div>
+        <ul class="menu-list">
+            <li class="menu-item">
+                <a class="menu-link" href="https://finalapp-nine.vercel.app/" target="_blank">
+                    New Form
+                    <div class="blade-slash"></div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" href="https://dashboard2-iota.vercel.app/" target="_blank">
+                    Load Form
+                    <div class="blade-slash"></div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <button class="menu-link action-exit">
+                    Exit
+                    <div class="blade-slash"></div>
+                </button>
+            </li>
+        </ul>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', () => {
-    gsap.config({ force3D: true });
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.config({ force3D: true });
 
-    const root = document.documentElement;
-    const ambientLight = document.querySelector('.ambient-light');
-    const menu = document.querySelector('.menu');
-    const menuItems = document.querySelectorAll('.menu-item');
-    const promptEl = document.querySelector('.prompt');
-    const sparkleContainer = document.querySelector('.sparkle-container');
-    const fireContainer = document.querySelector('.fire-container');
-
-    const setMouseX = gsap.quickSetter(root, '--mouse-x', 'px');
-    const setMouseY = gsap.quickSetter(root, '--mouse-y', 'px');
-    const setTiltX = gsap.quickSetter(root, '--tilt-x', 'deg');
-    const setTiltY = gsap.quickSetter(root, '--tilt-y', 'deg');
-
-    let hasInteracted = false;
-    let isOverInteractive = false;
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let lastSparkle = 0;
-    let lastFire = 0;
-
-    const createPool = (container, className, size, isMenu = false) => {
-        const pool = [];
-        for (let i = 0; i < size; i++) {
-            const el = document.createElement('div');
-            el.className = className;
-            if(isMenu) {
-                el.style.width = '50px'; el.style.height = '50px';
-                if(className === 'click-burst') { el.style.width = '3px'; el.style.height = '3px'; }
-            }
-            container.appendChild(el);
-            pool.push(el);
-        }
-        return { pool, idx: 0 };
-    };
-
-    const sparkles = createPool(sparkleContainer, 'sparkle-particle', 100);
-    const embers = createPool(fireContainer, 'ember-particle', 40);
-
-    menuItems.forEach(item => {
-        item.ripplePool = createPool(item, 'click-ripple', 3, true);
-        item.burstPool = createPool(item, 'click-burst', 24, true);
-        item.setHighX = gsap.quickSetter(item.querySelector('.highlight'), '--x', '%');
-        item.setHighY = gsap.quickSetter(item.querySelector('.highlight'), '--y', '%');
-    });
-
-    const getNext = (p) => {
-        const el = p.pool[p.idx];
-        p.idx = (p.idx + 1) % p.pool.length;
-        return el;
-    };
-
-    const spawnSparkle = (x, y, isFire) => {
-        const p = getNext(sparkles);
-        const size = isFire ? Math.random() * 8 + 6 : Math.random() * 5 + 2.5;
-        const dur = isFire ? Math.random() * 0.8 + 0.4 : Math.random() * 1.2 + 0.7;
-        const dX = (Math.random() - 0.5) * (isFire ? 90 : 60);
-        const dY = (Math.random() - 0.5) * (isFire ? 90 : 60);
-        
-        p.style.width = `${size}px`;
-        p.style.height = `${size}px`;
-        p.style.background = isFire 
-            ? 'radial-gradient(circle, rgba(255,230,100,1) 0%, rgba(255,120,60,0.85) 35%, rgba(200,50,0,0.5) 70%, rgba(139,0,0,0.2) 100%)'
-            : 'radial-gradient(circle, rgba(255,215,0,0.95) 0%, rgba(212,175,55,0.8) 40%, rgba(180,40,0,0.6) 75%, rgba(139,0,0,0.25) 100%)';
-        p.style.filter = isFire ? `blur(${Math.random()*1.5+1}px) brightness(200%)` : 'blur(0.8px) brightness(160%)';
-        p.style.boxShadow = isFire ? `0 0 ${Math.random()*12+8}px rgba(255,150,0,0.9)` : `0 0 ${Math.random()*7+5}px rgba(220,150,0,0.7)`;
-
-        gsap.fromTo(p, 
-            { x: x - size/2, y: y - size/2, opacity: 1, scale: isFire ? 1.3 : 1 },
-            { duration: dur, opacity: 0, scale: Math.random() * 0.3, x: `+=${dX}`, y: `+=${dY}`, ease: 'power1.out', overwrite: 'auto' }
-        );
-    };
-
-    const spawnEmber = () => {
-        const e = getNext(embers);
-        const size = Math.random() * 7 + 5;
-        const dur = Math.random() * 5 + 3.5;
-        
-        e.style.width = `${size}px`; e.style.height = `${size}px`;
-        e.style.left = `${Math.random() * window.innerWidth}px`; e.style.top = '100%';
-        e.style.background = 'radial-gradient(circle, rgba(255,220,100,0.9) 0%, rgba(255,140,50,0.7) 40%, rgba(170,30,0,0.5) 80%, transparent 100%)';
-        e.style.filter = 'blur(1.5px) brightness(170%)';
-        e.style.boxShadow = `0 0 ${Math.random()*8+6}px rgba(255,160,30,0.7)`;
-
-        gsap.fromTo(e,
-            { y: 0, x: 0, scale: 1, opacity: 1 },
-            { duration: dur, y: -window.innerHeight - 100, x: (Math.random() - 0.5) * 180, opacity: 0, scale: Math.random() * 0.5 + 0.3, ease: 'sine.inOut', delay: Math.random() * 0.5, overwrite: 'auto' }
-        );
-    };
-
-    gsap.ticker.add((time) => {
-        if (!hasInteracted) return;
-        if (time - lastSparkle > 0.035) {
-            const cnt = isOverInteractive ? 3 : 1;
-            for(let i=0; i<cnt; i++) spawnSparkle(mouseX + (Math.random()-0.5)*(isOverInteractive?20:12), mouseY + (Math.random()-0.5)*(isOverInteractive?20:12), isOverInteractive);
-            lastSparkle = time;
-        }
-        if (time - lastFire > 0.2) {
-            if (Math.random() < 0.4) spawnEmber();
-            lastFire = time;
-        }
-    });
-
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX; mouseY = e.clientY;
-        setMouseX(mouseX); setMouseY(mouseY);
-        setTiltX(((mouseX / window.innerWidth) - 0.5) * 8);
-        setTiltY(((mouseY / window.innerHeight) - 0.5) * 8);
-        if(hasInteracted) ambientLight.style.opacity = '0.45';
-    }, { passive: true });
-
-    window.addEventListener('mouseleave', () => ambientLight.style.opacity = '0', { passive: true });
-
-    menuItems.forEach(item => {
-        item.addEventListener('mousemove', (e) => {
-            const r = item.getBoundingClientRect();
-            item.setHighX(((e.clientX - r.left) / r.width) * 100);
-            item.setHighY(((e.clientY - r.top) / r.height) * 100);
-        }, { passive: true });
-        
-        item.addEventListener('mouseenter', () => isOverInteractive = true);
-        item.addEventListener('mouseleave', () => isOverInteractive = false);
-
-        item.addEventListener('click', (e) => {
-            const r = item.getBoundingClientRect();
-            const rip = getNext(item.ripplePool);
-            rip.style.background = 'radial-gradient(circle, rgba(212,175,55,0.3) 0%, rgba(139,0,0,0.1) 70%, transparent 80%)';
+            const bgLayer = document.querySelector('.background-layer');
+            const omega = document.querySelector('.omega-shadow');
+            const particlesContainer = document.querySelector('.particles-container');
+            const promptContainer = document.querySelector('.prompt-container');
             
-            gsap.fromTo(rip, 
-                { left: e.clientX - r.left - 25, top: e.clientY - r.top - 25, scale: 0, opacity: 1 },
-                { scale: 7, opacity: 0, duration: 0.7, ease: 'power3.out', overwrite: 'auto' }
-            );
+            let isStarted = false;
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
 
-            for (let i = 0; i < 8; i++) {
-                const b = getNext(item.burstPool);
-                b.style.background = 'var(--metallic-gold)';
-                const ang = (Math.PI * 2 / 8) * i;
-                gsap.fromTo(b,
-                    { left: '50%', top: '50%', x: 0, y: 0, scale: 1, opacity: 1, marginLeft: '-1.5px', marginTop: '-1.5px' },
-                    { x: Math.cos(ang) * 70, y: Math.sin(ang) * 70, scale: 0, opacity: 0, duration: 0.65, ease: 'power2.out', overwrite: 'auto' }
+            // Particle System (Optimized & Mature)
+            const createParticles = () => {
+                const particleCount = 45; // Low count for sleekness
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const isAsh = Math.random() > 0.3;
+                    const p = document.createElement('div');
+                    p.classList.add('particle');
+                    if (isAsh) p.classList.add('ash');
+                    
+                    particlesContainer.appendChild(p);
+
+                    const size = isAsh ? gsap.utils.random(2, 6) : gsap.utils.random(1, 3);
+                    p.style.width = `${size}px`;
+                    p.style.height = `${size}px`;
+                    
+                    if (isAsh) {
+                        p.style.filter = `blur(${gsap.utils.random(1, 3)}px)`;
+                        p.style.opacity = gsap.utils.random(0.1, 0.4);
+                    } else {
+                        p.style.opacity = gsap.utils.random(0.4, 0.8);
+                    }
+
+                    animateParticle(p, true);
+                }
+            };
+
+            const animateParticle = (p, isInitial = false) => {
+                const startY = isInitial ? gsap.utils.random(0, window.innerHeight) : window.innerHeight + 50;
+                const endY = -50;
+                const startX = gsap.utils.random(-100, window.innerWidth + 100);
+                const driftX = gsap.utils.random(-150, 150); // Gentle horizontal drift
+                const duration = gsap.utils.random(12, 25); // Slow, floating feeling
+
+                gsap.fromTo(p, 
+                    { 
+                        y: startY, 
+                        x: startX,
+                        rotation: gsap.utils.random(0, 360)
+                    },
+                    { 
+                        y: endY, 
+                        x: startX + driftX, 
+                        rotation: `+=${gsap.utils.random(-90, 90)}`,
+                        duration: duration,
+                        ease: "none",
+                        onComplete: () => animateParticle(p)
+                    }
                 );
-            }
+            };
 
-            gsap.timeline().to(item, { scale: 0.96, duration: 0.12, ease: 'sine.inOut' }).to(item, { scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.7)' });
+            createParticles();
 
-            if (item.textContent.trim().toUpperCase() === 'EXIT') gsap.to(document.body, {opacity: 0, duration: 0.5, onComplete: () => { window.open('','_self',''); window.close(); }});
+            // Subtle Parallax (No aggressive shaking)
+            window.addEventListener('mousemove', (e) => {
+                if (!isStarted) return;
+                
+                // Smooth interpolation for mouse position
+                const targetX = (e.clientX / window.innerWidth - 0.5) * 20;
+                const targetY = (e.clientY / window.innerHeight - 0.5) * 20;
+
+                gsap.to(bgLayer, {
+                    x: targetX,
+                    y: targetY,
+                    duration: 2,
+                    ease: "power2.out"
+                });
+
+                gsap.to(omega, {
+                    x: -targetX * 2,
+                    y: -targetY * 2,
+                    duration: 3,
+                    ease: "power2.out"
+                });
+            }, { passive: true });
+
+            // Interactive elements
+            const menuLinks = document.querySelectorAll('.menu-link');
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const isExit = link.classList.contains('action-exit');
+                    
+                    // Subtle click reaction
+                    gsap.to(link, {
+                        scale: 0.98,
+                        duration: 0.1,
+                        yoyo: true,
+                        repeat: 1
+                    });
+
+                    // Quick cinematic red flash on click
+                    gsap.fromTo('.screen-flash', 
+                        { opacity: 0.15 }, 
+                        { opacity: 0, duration: 0.6, ease: "power2.out" }
+                    );
+
+                    if (isExit) {
+                        e.preventDefault();
+                        // Cinematic fade out sequence
+                        const tl = gsap.timeline();
+                        tl.to('.ui-container', { x: -50, opacity: 0, duration: 0.8, ease: "power2.in" }, 0)
+                          .to('.background-layer, .omega-shadow, .particles-container', { opacity: 0, duration: 1.5, ease: "power2.inOut" }, 0.2)
+                          .to(document.body, { backgroundColor: '#000', duration: 1 }, 0.5)
+                          .add(() => {
+                              window.open('','_self',''); 
+                              window.close();
+                          });
+                    }
+                });
+            });
+
+            // Start Sequence
+            const igniteMenu = () => {
+                if (isStarted) return;
+                isStarted = true;
+
+                // Remove event listeners
+                window.removeEventListener('keydown', igniteMenu);
+                window.removeEventListener('click', igniteMenu);
+                window.removeEventListener('touchstart', igniteMenu);
+
+                const tl = gsap.timeline();
+
+                // Fade out prompt
+                tl.to(promptContainer, {
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power2.inOut",
+                    onComplete: () => promptContainer.remove()
+                }, 0);
+
+                // Flash effect for impact
+                tl.fromTo('.screen-flash', 
+                    { opacity: 0.3 }, 
+                    { opacity: 0, duration: 1.5, ease: "power3.out" }, 
+                0.5);
+
+                // Reveal Title
+                tl.to('.title-wrapper', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.2,
+                    ease: "power3.out"
+                }, 0.8);
+
+                tl.to('.title-separator', {
+                    width: window.innerWidth > 768 ? '150px' : '80%',
+                    duration: 1.5,
+                    ease: "power4.out"
+                }, 1.2);
+
+                // Reveal Menu Items
+                tl.to('.menu-list', {
+                    opacity: 1,
+                    duration: 0.5
+                }, 1.4);
+
+                tl.fromTo('.menu-item', 
+                    { opacity: 0, x: -20 }, 
+                    { 
+                        opacity: 1, 
+                        x: 0, 
+                        duration: 0.8, 
+                        stagger: 0.15, 
+                        ease: "power2.out" 
+                    }, 
+                1.4);
+            };
+
+            window.addEventListener('keydown', igniteMenu);
+            window.addEventListener('click', igniteMenu);
+            window.addEventListener('touchstart', igniteMenu, { passive: true });
+            
+            // Prevent context menu
+            window.addEventListener('contextmenu', e => e.preventDefault());
         });
-    });
-
-    const start = () => {
-        if (hasInteracted) return;
-        hasInteracted = true;
-        gsap.to(promptEl, { opacity: 0, duration: 0.5, onComplete: () => promptEl.remove() });
-        gsap.to(menu, { opacity: 1, duration: 0.1, onStart: () => menu.style.pointerEvents = 'auto' });
-        gsap.to(menuItems, { opacity: 1, y: 0, rotateX: 0, scale: 1, filter: 'blur(0px)', stagger: 0.18, duration: 1.2, ease: 'power3.out', delay: 0.3 });
-        window.removeEventListener('keydown', start);
-        window.removeEventListener('click', start);
-        window.removeEventListener('touchstart', start);
-    };
-
-    window.addEventListener('keydown', start);
-    window.addEventListener('click', start);
-    window.addEventListener('touchstart', start, { passive: true });
-    window.addEventListener('contextmenu', e => e.preventDefault());
-});
     </script>
 </body>
 </html>
