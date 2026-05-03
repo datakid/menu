@@ -1,558 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LX Menu</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-pure: #020101;
-            --blood-deep: #2a0000;
-            --blood-bright: #ad0000;
-            --blood-glow: #ff1a1a;
-            --ember: #ff5500;
-            --gold-dark: #b8860b;
-            --gold-light: #ffd700;
-            --text-dim: #7a7a7a;
-            --text-hover: #f0f0f0;
-            --text-active: #ffffff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #07060a;
+  --red:   #7a0000;
+  --red2:  #a80000;
+  --redgl: rgba(140,0,0,.38);
+  --gold:  #9e7f3c;
+  --goldl: #c9a85a;
+  --white: #ede8e0;
+  --mid:   #5e5a55;
+  --dim:   #2e2b28;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100vw;height:100vh;background:var(--bg);overflow:hidden;-webkit-font-smoothing:antialiased;user-select:none}
+#cv{position:fixed;inset:0;z-index:1;width:100%;height:100%}
+.vig{position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse 85% 85% at 50% 50%,transparent 8%,rgba(5,4,8,.45) 48%,rgba(2,1,4,.9) 80%,#010009 100%)}
+.ns{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23f)'/%3E%3C/svg%3E");background-size:250px;animation:ns .2s steps(2) infinite}
+@keyframes ns{0%{background-position:0 0}33%{background-position:-55px 28px}66%{background-position:42px -38px}}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+.ui{position:fixed;left:10vw;top:50%;transform:translateY(-50%);z-index:10;display:flex;flex-direction:column;gap:3rem}
 
-        html, body {
-            width: 100vw;
-            height: 100vh;
-            background-color: var(--bg-pure);
-            font-family: 'Cinzel', serif;
-            color: var(--text-dim);
-            overflow: hidden;
-            cursor: default;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+.title-wrap{opacity:0;position:relative;display:inline-block}
 
-        .background-layer {
-            position: fixed;
-            inset: -5%;
-            width: 110%;
-            height: 110%;
-            background: radial-gradient(circle at 60% 40%, var(--blood-deep) 0%, var(--bg-pure) 60%);
-            z-index: 0;
-            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            will-change: transform;
-        }
+.tt{
+  display:block;
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(2.8rem,5.8vw,6rem);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  line-height:1;
+  background:linear-gradient(110deg,#b0a890 0%,#ede8df 18%,#ffffff 28%,#e4ddd0 42%,#9e9690 56%,#d4ccc0 70%,#f2eee8 82%,#b4ac9c 100%);
+  background-size:220% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  position:relative;
+  z-index:1;
+  animation:sheen 9s ease-in-out infinite;
+}
+@keyframes sheen{0%,100%{background-position:100% 0}48%,52%{background-position:-60% 0}}
 
-        .ambient-mist {
-            position: fixed;
-            width: 200vw;
-            height: 200vh;
-            top: -50vh;
-            left: -50vw;
-            background: radial-gradient(circle at center, rgba(173, 0, 0, 0.05) 0%, transparent 60%);
-            filter: blur(40px);
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.6;
-        }
+.tg{
+  position:absolute;top:0;left:0;
+  display:block;
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(2.8rem,5.8vw,6rem);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  line-height:1;
+  color:var(--red2);
+  filter:blur(34px);
+  opacity:0;
+  pointer-events:none;
+  z-index:0;
+  white-space:nowrap;
+}
 
-        .mist-1 { animation: drift 40s infinite alternate ease-in-out; }
-        .mist-2 { animation: drift 50s infinite alternate-reverse ease-in-out; transform: scale(1.2); }
+.tcr,.tcb{
+  position:absolute;top:0;left:0;
+  display:block;
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(2.8rem,5.8vw,6rem);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  line-height:1;
+  opacity:0;
+  pointer-events:none;
+  white-space:nowrap;
+  mix-blend-mode:screen;
+  z-index:2;
+  transition:opacity .04s,transform .04s;
+}
+.tcr{color:#e83030}
+.tcb{color:#3050e8}
+.title-wrap.glitch .tcr{opacity:.5;transform:translate(-6px,1px)}
+.title-wrap.glitch .tcb{opacity:.5;transform:translate(6px,-1px)}
 
-        @keyframes drift {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(3vw, 3vh) scale(1.05); }
-        }
+.sep-wrap{margin-top:1rem;overflow:hidden;height:1px}
+.sep{height:1px;width:180px;background:linear-gradient(90deg,var(--goldl) 0%,var(--red2) 55%,transparent 100%);box-shadow:0 0 8px var(--redgl),0 0 3px rgba(180,140,60,.28);transform:translateX(-190px)}
 
-        .omega-shadow {
-            position: fixed;
-            right: -18vw;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 180vh;
-            font-weight: 800;
-            background: linear-gradient(to bottom, #110000, var(--bg-pure));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 50px rgba(173, 0, 0, 0.2));
-            z-index: 2;
-            pointer-events: none;
-            user-select: none;
-        }
+.menu-list{list-style:none;display:flex;flex-direction:column;gap:1.5rem;opacity:0}
+.menu-item{position:relative}
 
-        .cinematic-vignette {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at center, transparent 30%, rgba(2, 1, 1, 0.85) 80%, #000000 100%);
-            box-shadow: inset 0 0 250px rgba(0,0,0,0.95);
-            pointer-events: none;
-            z-index: 15;
-        }
+.menu-link{
+  display:inline-flex;align-items:center;
+  font-family:'Cinzel',serif;
+  font-size:clamp(.78rem,1.5vw,1.18rem);
+  font-weight:400;letter-spacing:.5em;text-transform:uppercase;
+  color:var(--mid);text-decoration:none;background:transparent;border:none;outline:none;
+  padding:.35rem 0;position:relative;cursor:pointer;
+  transition:color .38s ease,letter-spacing .38s ease,transform .38s ease;
+}
+.menu-link .gem{
+  display:inline-block;width:.3em;height:.3em;background:var(--red2);
+  transform:rotate(45deg) scale(0);opacity:0;flex-shrink:0;margin-right:0;
+  transition:opacity .28s,transform .28s,margin-right .28s;
+  box-shadow:0 0 9px var(--redgl);
+}
+.menu-link .lbl{position:relative;display:inline-block}
+.menu-link .ul{
+  position:absolute;bottom:-2px;left:0;
+  height:1px;width:0;
+  background:linear-gradient(90deg,var(--gold) 0%,var(--red2) 65%,transparent 100%);
+  box-shadow:0 0 6px rgba(140,0,0,.4);
+  transition:width .46s cubic-bezier(.22,.85,.27,1);
+  pointer-events:none;
+}
+.menu-link:hover,.menu-link:focus-visible{color:var(--white);letter-spacing:.62em;transform:translateX(7px)}
+.menu-link:hover .gem{opacity:1;transform:rotate(45deg) scale(1);margin-right:.55em}
+.menu-link:hover .ul{width:100%}
+.menu-list:has(.menu-link:hover) .menu-link:not(:hover){color:var(--dim);transition:color .18s}
 
-        .particles-container {
-            position: fixed;
-            inset: -10%;
-            width: 120%;
-            height: 120%;
-            pointer-events: none;
-            z-index: 5;
-        }
+.mk{position:fixed;z-index:10;pointer-events:none;opacity:0}
+.mk.tl{top:1.6rem;left:1.6rem}
+.mk.br{bottom:1.6rem;right:4.8rem}
 
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: var(--ember);
-            will-change: transform, opacity;
-            box-shadow: 0 0 10px var(--ember), 0 0 20px var(--blood-bright);
-        }
+.sfx{
+  position:fixed;bottom:1.6rem;right:1.6rem;z-index:10;
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  background:transparent;border:none;outline:none;
+  color:var(--dim);cursor:pointer;opacity:0;transition:color .3s;
+}
+.sfx:hover{color:var(--mid)}
+.sfx svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.sfx-lbl{font-family:'Cinzel',serif;font-size:.42rem;letter-spacing:.35em;text-transform:uppercase}
 
-        .ash {
-            background: #1a1a1a;
-            box-shadow: 0 0 5px #000;
-        }
+.gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.gate-txt{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.7em;font-weight:400;text-transform:uppercase;color:var(--mid);animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.15}50%{opacity:.7}}
 
-        .ui-container {
-            position: absolute;
-            left: 10%;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 20;
-            display: flex;
-            flex-direction: column;
-            gap: 4rem;
-        }
+.fl{position:fixed;inset:0;z-index:40;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(120,0,0,.6),transparent 68%);opacity:0}
 
-        .title-wrapper {
-            position: relative;
-            opacity: 0;
-        }
-
-        .main-title {
-            font-size: clamp(3rem, 7vw, 6.5rem);
-            font-weight: 700;
-            background: linear-gradient(180deg, #ffffff 0%, #d4d4d4 40%, #737373 80%, #2e2e2e 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            filter: drop-shadow(0 0 30px rgba(173, 0, 0, 0.8));
-            position: relative;
-            will-change: transform, opacity, filter, letter-spacing;
-        }
-
-        .main-title::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            top: 0;
-            z-index: -1;
-            background: linear-gradient(180deg, var(--gold-light) 0%, var(--blood-bright) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0.3;
-            filter: blur(12px);
-        }
-
-        .title-separator {
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--gold-light), var(--blood-bright), transparent);
-            margin-top: 1.5rem;
-            box-shadow: 0 0 15px var(--blood-glow), 0 0 5px var(--gold-light);
-            opacity: 0.8;
-        }
-
-        .menu-list {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            list-style: none;
-            opacity: 0;
-        }
-
-        .menu-item {
-            position: relative;
-            width: fit-content;
-        }
-
-        .menu-link {
-            display: flex;
-            align-items: center;
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-            font-weight: 500;
-            color: var(--text-dim);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.5em;
-            padding: 0.5rem 0;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            outline: none;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
-
-        .menu-link::before {
-            content: '♦';
-            position: absolute;
-            left: -30px;
-            font-size: 0.8em;
-            color: var(--blood-bright);
-            opacity: 0;
-            transform: translateX(-10px) rotate(45deg);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            text-shadow: 0 0 15px var(--blood-glow);
-        }
-
-        .blade-slash {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--gold-light), var(--blood-glow), transparent);
-            box-shadow: 0 0 12px var(--ember);
-            transition: width 0.5s cubic-bezier(0.21, 0.83, 0.26, 1);
-            pointer-events: none;
-        }
-
-        .menu-link:hover, .menu-link:focus {
-            color: var(--text-active);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 40px rgba(173, 0, 0, 0.6);
-            letter-spacing: 0.6em;
-            transform: translateX(10px);
-        }
-
-        .menu-link:hover::before {
-            opacity: 1;
-            transform: translateX(0) rotate(0deg);
-        }
-
-        .menu-link:hover .blade-slash {
-            width: 120%;
-        }
-
-        .prompt-container {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            background: var(--bg-pure);
-            transition: opacity 0.8s ease;
-        }
-
-        .prompt-text {
-            font-size: 1.2rem;
-            font-weight: 500;
-            letter-spacing: 0.6em;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            animation: breathe 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes breathe {
-            0%, 100% { opacity: 0.4; filter: blur(1px); }
-            50% { opacity: 1; filter: blur(0px); text-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 10px var(--blood-deep); }
-        }
-
-        .screen-flash {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at center, var(--blood-glow), var(--bg-pure));
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            mix-blend-mode: color-dodge;
-        }
-
-        @media screen and (max-width: 768px) {
-            .ui-container {
-                left: 50%;
-                transform: translate(-50%, -50%);
-                align-items: center;
-                gap: 3rem;
-            }
-            .main-title {
-                text-align: center;
-            }
-            .title-separator {
-                background: radial-gradient(circle, var(--blood-bright), var(--ember), transparent 80%);
-                height: 1px;
-                left: 50%;
-                transform: translateX(-50%);
-                position: relative;
-            }
-            .menu-list {
-                align-items: center;
-            }
-            .menu-link::before {
-                display: none;
-            }
-            .blade-slash {
-                background: linear-gradient(90deg, transparent, var(--blood-bright), transparent);
-                left: 50%;
-                transform: translateX(-50%);
-            }
-            .menu-link:hover {
-                transform: translateY(-2px);
-                letter-spacing: 0.6em;
-            }
-            .menu-link:hover .blade-slash {
-                width: 100%;
-            }
-            .omega-shadow {
-                right: -25vw;
-                font-size: 100vh;
-                opacity: 0.3;
-            }
-        }
-    </style>
+@media(max-width:768px){
+  .ui{left:50%;transform:translate(-50%,-50%);align-items:center;width:90%;gap:2.4rem}
+  .tt{text-align:center;font-size:clamp(2rem,8.5vw,2.8rem);letter-spacing:.12em}
+  .tg,.tcr,.tcb{font-size:clamp(2rem,8.5vw,2.8rem);letter-spacing:.12em;left:50%;transform:translateX(-50%)}
+  .title-wrap.glitch .tcr{transform:translateX(calc(-50% - 5px))}
+  .title-wrap.glitch .tcb{transform:translateX(calc(-50% + 5px))}
+  .sep{width:90px;background:linear-gradient(90deg,transparent,var(--red2),var(--goldl),var(--red2),transparent);transform:translateX(-100px)}
+  .menu-list{align-items:center}
+  .menu-link .gem{display:none}
+  .menu-link:hover{transform:translateY(-2px)}
+}
+</style>
 </head>
 <body>
-    <div class="background-layer"></div>
-    <div class="ambient-mist mist-1"></div>
-    <div class="ambient-mist mist-2"></div>
-    <div class="omega-shadow">Ω</div>
-    <div class="particles-container"></div>
-    <div class="cinematic-vignette"></div>
-    <div class="screen-flash"></div>
 
-    <div class="prompt-container">
-        <div class="prompt-text">Press Any Key</div>
-    </div>
+<canvas id="cv"></canvas>
+<div class="vig"></div>
+<div class="ns"></div>
+<div class="fl" id="fl"></div>
 
-    <div class="ui-container">
-        <div class="title-wrapper">
-            <h1 class="main-title" data-text="LX Menu">LX Menu</h1>
-            <div class="title-separator"></div>
-        </div>
+<div class="gate" id="gate"><p class="gate-txt">Press Any Key</p></div>
 
-        <ul class="menu-list">
-            <li class="menu-item">
-                <a class="menu-link" href="https://finalapp-nine.vercel.app/" target="_blank">
-                    New Form
-                    <div class="blade-slash"></div>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a class="menu-link" href="https://dashboard2-iota.vercel.app/" target="_blank">
-                    Load Form
-                    <div class="blade-slash"></div>
-                </a>
-            </li>
-            <li class="menu-item">
-                <button class="menu-link action-exit">
-                    Exit
-                    <div class="blade-slash"></div>
-                </button>
-            </li>
-        </ul>
-    </div>
+<div class="ui" id="ui">
+  <div class="title-wrap" id="tw">
+    <span class="tg" aria-hidden="true">LX Menu</span>
+    <span class="tcr" aria-hidden="true">LX Menu</span>
+    <span class="tcb" aria-hidden="true">LX Menu</span>
+    <h1 class="tt">LX Menu</h1>
+    <div class="sep-wrap"><div class="sep" id="sep"></div></div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            gsap.config({ force3D: true });
+  <ul class="menu-list" id="ml">
+    <li class="menu-item">
+      <a class="menu-link" href="https://finalapp-nine.vercel.app/" target="_blank" rel="noopener">
+        <span class="gem"></span><span class="lbl">New Form<span class="ul"></span></span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a class="menu-link" href="https://dashboard2-iota.vercel.app/" target="_blank" rel="noopener">
+        <span class="gem"></span><span class="lbl">Load Form<span class="ul"></span></span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <button class="menu-link" id="exit-btn">
+        <span class="gem"></span><span class="lbl">Exit<span class="ul"></span></span>
+      </button>
+    </li>
+  </ul>
+</div>
 
-            const bgLayer = document.querySelector('.background-layer');
-            const omega = document.querySelector('.omega-shadow');
-            const particlesContainer = document.querySelector('.particles-container');
-            const promptContainer = document.querySelector('.prompt-container');
-            
-            let isStarted = false;
+<div class="mk tl">
+  <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+    <polyline points="42,1 1,1 1,42" stroke="rgba(158,127,60,.2)" stroke-width=".8"/>
+    <circle cx="1" cy="1" r="1.6" fill="rgba(158,127,60,.28)"/>
+  </svg>
+</div>
+<div class="mk br">
+  <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+    <polyline points="0,41 41,41 41,0" stroke="rgba(158,127,60,.2)" stroke-width=".8"/>
+    <circle cx="41" cy="41" r="1.6" fill="rgba(158,127,60,.28)"/>
+  </svg>
+</div>
 
-            const createParticles = () => {
-                const particleCount = 50;
-                
-                for (let i = 0; i < particleCount; i++) {
-                    const isAsh = Math.random() > 0.4;
-                    const p = document.createElement('div');
-                    p.classList.add('particle');
-                    if (isAsh) p.classList.add('ash');
-                    
-                    particlesContainer.appendChild(p);
+<button class="sfx" id="sfx-btn" aria-label="Toggle sound effects">
+  <svg viewBox="0 0 24 24">
+    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+    <path class="sw" d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    <path class="sw" d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    <line class="sx" x1="22" y1="9" x2="16" y2="15"/>
+    <line class="sx" x1="16" y1="9" x2="22" y2="15"/>
+  </svg>
+  <span class="sfx-lbl" id="sfx-lbl">SFX</span>
+</button>
 
-                    const size = isAsh ? gsap.utils.random(2, 6) : gsap.utils.random(1, 3);
-                    p.style.width = `${size}px`;
-                    p.style.height = `${size}px`;
-                    
-                    if (isAsh) {
-                        p.style.filter = `blur(${gsap.utils.random(1, 3)}px)`;
-                        p.style.opacity = gsap.utils.random(0.1, 0.4);
-                    } else {
-                        p.style.opacity = gsap.utils.random(0.4, 0.8);
-                    }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+(function(){
 
-                    animateParticle(p, true);
-                }
-            };
+const cv=document.getElementById('cv');
+const cx=cv.getContext('2d');
+let W,H,mx=.5,my=.5,tmx=.5,tmy=.5;
 
-            const animateParticle = (p, isInitial = false) => {
-                const startY = isInitial ? gsap.utils.random(0, window.innerHeight) : window.innerHeight + 50;
-                const endY = -50;
-                const startX = gsap.utils.random(-100, window.innerWidth + 100);
-                const driftX = gsap.utils.random(-150, 150);
-                const duration = gsap.utils.random(12, 28);
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}
+resize();
+addEventListener('resize',resize,{passive:true});
+addEventListener('mousemove',e=>{tmx=e.clientX/W;tmy=e.clientY/H},{passive:true});
 
-                gsap.fromTo(p, 
-                    { 
-                        y: startY, 
-                        x: startX,
-                        rotation: gsap.utils.random(0, 360)
-                    },
-                    { 
-                        y: endY, 
-                        x: startX + driftX, 
-                        rotation: `+=${gsap.utils.random(-180, 180)}`,
-                        duration: duration,
-                        ease: "none",
-                        onComplete: () => animateParticle(p)
-                    }
-                );
-            };
+const parts=[];
+function mkP(em,init){
+  return{
+    e:em,
+    x:Math.random()*(W||innerWidth),
+    y:init?Math.random()*(H||innerHeight):(H||innerHeight)+10,
+    s:em?.8+Math.random()*1.8:1.3+Math.random()*3.6,
+    vy:-(0.2+Math.random()*.5),
+    vx:(Math.random()-.5)*.18,
+    dr:(Math.random()-.5)*.01,
+    li:Math.random(),
+    dc:em?.0007+Math.random()*.0007:.00022+Math.random()*.00035,
+    ph:Math.random()*Math.PI*2,
+    fr:.018+Math.random()*.022,
+  };
+}
+for(let i=0;i<44;i++)parts.push(mkP(true,true));
+for(let i=0;i<32;i++)parts.push(mkP(false,true));
 
-            createParticles();
+function tickP(p){
+  p.ph+=p.fr;
+  const dx=mx-p.x/W,dy=my-p.y/H;
+  const d=Math.sqrt(dx*dx+dy*dy)||1;
+  const r=d<.13?(.13-d)/.13*.25:0;
+  p.x+=p.vx+p.dr+(dx/d)*r;
+  p.y+=p.vy+(dy/d)*r;
+  p.li-=p.dc;
+  if(p.li<=0||p.y<-18)Object.assign(p,mkP(p.e,false),{x:Math.random()*W});
+}
 
-            window.addEventListener('mousemove', (e) => {
-                if (!isStarted) return;
-                
-                const targetX = (e.clientX / window.innerWidth - 0.5) * 20;
-                const targetY = (e.clientY / window.innerHeight - 0.5) * 20;
+function drawP(p){
+  const a=Math.max(0,p.li)*(.38+.62*Math.sin(p.ph));
+  cx.save();cx.globalAlpha=a;
+  if(p.e){
+    const g=cx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.s*5);
+    g.addColorStop(0,'rgba(255,150,50,1)');
+    g.addColorStop(.3,'rgba(185,40,0,.52)');
+    g.addColorStop(1,'rgba(50,0,0,0)');
+    cx.fillStyle=g;
+    cx.beginPath();cx.arc(p.x,p.y,p.s*5,0,Math.PI*2);cx.fill();
+    cx.fillStyle='#ffe4aa';
+    cx.beginPath();cx.arc(p.x,p.y,p.s*.45,0,Math.PI*2);cx.fill();
+  }else{
+    cx.fillStyle=`rgba(12,9,7,${.62*a})`;
+    cx.beginPath();cx.ellipse(p.x,p.y,p.s*.38,p.s*1.3,.38,0,Math.PI*2);cx.fill();
+  }
+  cx.restore();
+}
 
-                gsap.to(bgLayer, {
-                    x: targetX,
-                    y: targetY,
-                    duration: 2,
-                    ease: "power2.out"
-                });
+function drawBg(){
+  const bx=W*(.41+.17*(1-mx)),by=H*(.37+.2*my);
+  const g=cx.createRadialGradient(bx,by,0,bx,by,W*.88);
+  g.addColorStop(0,'#130809');
+  g.addColorStop(.28,'#0b0405');
+  g.addColorStop(.65,'#060305');
+  g.addColorStop(1,'#07060a');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const g2=cx.createRadialGradient(bx,by,0,bx,by,W*.4);
+  g2.addColorStop(0,'rgba(70,0,0,.08)');g2.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g2;cx.fillRect(0,0,W,H);
+}
 
-                gsap.to(omega, {
-                    x: -targetX * 0.4,
-                    y: -targetY * 0.4,
-                    duration: 2.5,
-                    ease: "power2.out"
-                });
-            }, { passive: true });
+(function loop(){
+  requestAnimationFrame(loop);
+  mx+=(tmx-mx)*.05;my+=(tmy-my)*.05;
+  cx.clearRect(0,0,W,H);
+  drawBg();
+  parts.forEach(p=>{tickP(p);drawP(p);});
+})();
 
-            const menuLinks = document.querySelectorAll('.menu-link');
-            
-            menuLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    const isExit = link.classList.contains('action-exit');
-                    
-                    gsap.to(link, {
-                        scale: 0.95,
-                        duration: 0.1,
-                        yoyo: true,
-                        repeat: 1
-                    });
+let AC=null,MG=null,SFX=false;
 
-                    gsap.fromTo('.screen-flash', 
-                        { opacity: 0.2 }, 
-                        { opacity: 0, duration: 0.6, ease: "power2.out" }
-                    );
+function initAC(){
+  if(AC)return;
+  AC=new(window.AudioContext||window.webkitAudioContext)();
+  MG=AC.createGain();MG.gain.value=0;MG.connect(AC.destination);
+}
 
-                    if (isExit) {
-                        e.preventDefault();
-                        const tl = gsap.timeline();
-                        tl.to('.ui-container', { x: -100, opacity: 0, filter: "blur(10px)", duration: 0.8, ease: "power3.in" }, 0)
-                          .to('.background-layer, .ambient-mist, .omega-shadow, .particles-container', { opacity: 0, scale: 1.05, duration: 1.2, ease: "power2.inOut" }, 0.2)
-                          .to(document.body, { backgroundColor: '#000', duration: 0.8 }, 0.5)
-                          .add(() => {
-                              window.open('','_self',''); 
-                              window.close();
-                          });
-                    }
-                });
-            });
+function sndHov(){
+  if(!AC||!SFX)return;
+  const t=AC.currentTime;
+  const o=AC.createOscillator(),g=AC.createGain(),f=AC.createBiquadFilter();
+  o.type='sine';
+  o.frequency.setValueAtTime(380,t);
+  o.frequency.exponentialRampToValueAtTime(160,t+.1);
+  f.type='bandpass';f.frequency.value=480;f.Q.value=2.2;
+  g.gain.setValueAtTime(.03,t);g.gain.exponentialRampToValueAtTime(.001,t+.11);
+  o.connect(f);f.connect(g);g.connect(MG);
+  o.start(t);o.stop(t+.13);
+}
 
-            const igniteMenu = () => {
-                if (isStarted) return;
-                isStarted = true;
+function sndClk(){
+  if(!AC||!SFX)return;
+  const t=AC.currentTime,sr=AC.sampleRate;
+  const buf=AC.createBuffer(1,sr*.28,sr),d=buf.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.4);
+  const src=AC.createBufferSource(),g=AC.createGain(),f=AC.createBiquadFilter();
+  f.type='lowpass';f.frequency.value=320;
+  g.gain.setValueAtTime(.34,t);g.gain.exponentialRampToValueAtTime(.001,t+.28);
+  src.buffer=buf;src.connect(f);f.connect(g);g.connect(MG);src.start(t);
+}
 
-                window.removeEventListener('keydown', igniteMenu);
-                window.removeEventListener('click', igniteMenu);
-                window.removeEventListener('touchstart', igniteMenu);
+const sfxBtn=document.getElementById('sfx-btn');
+const sfxLbl=document.getElementById('sfx-lbl');
+const sw=sfxBtn.querySelectorAll('.sw');
+const sx=sfxBtn.querySelectorAll('.sx');
+sw.forEach(el=>el.style.display='none');
 
-                const tl = gsap.timeline();
+sfxBtn.addEventListener('click',()=>{
+  initAC();if(AC.state==='suspended')AC.resume();
+  SFX=!SFX;
+  sw.forEach(el=>el.style.display=SFX?'':'none');
+  sx.forEach(el=>el.style.display=SFX?'none':'');
+  sfxLbl.textContent=SFX?'SFX ON':'SFX OFF';
+  MG.gain.setTargetAtTime(SFX?.85:0,AC.currentTime,.08);
+});
 
-                tl.to(promptContainer, {
-                    opacity: 0,
-                    filter: "blur(10px)",
-                    scale: 1.1,
-                    duration: 0.5,
-                    ease: "power2.inOut",
-                    onComplete: () => promptContainer.remove()
-                }, 0);
+document.querySelectorAll('.menu-link').forEach(el=>el.addEventListener('mouseenter',sndHov));
 
-                tl.fromTo('.screen-flash', 
-                    { opacity: 0.4 }, 
-                    { opacity: 0, duration: 1.2, ease: "power3.out" }, 
-                0.2);
+document.getElementById('exit-btn').addEventListener('click',e=>{
+  e.preventDefault();sndClk();
+  gsap.fromTo('#fl',{opacity:.45},{opacity:0,duration:.9,ease:'power3.out'});
+  gsap.timeline()
+    .to('#ui',{x:-45,opacity:0,duration:.55,ease:'power3.in'},0)
+    .to('.mk',{opacity:0,duration:.35},0)
+    .to('#sfx-btn',{opacity:0,duration:.35},0)
+    .to('#cv',{opacity:0,duration:.8,ease:'power2.in'},0.18)
+    .add(()=>{try{window.close();}catch(_){}});
+});
 
-                tl.to('.title-wrapper', {
-                    opacity: 1,
-                    duration: 0.1
-                }, 0.2);
+document.querySelectorAll('a.menu-link').forEach(a=>a.addEventListener('click',sndClk));
 
-                tl.fromTo('.main-title',
-                    { 
-                        opacity: 0, 
-                        scale: 1.1, 
-                        filter: "blur(10px)", 
-                        letterSpacing: "0.1em" 
-                    },
-                    { 
-                        opacity: 1, 
-                        scale: 1, 
-                        filter: "blur(0px)", 
-                        letterSpacing: "0.2em", 
-                        duration: 1.2, 
-                        ease: "power3.out" 
-                    }, 
-                0.2);
+let revealed=false;
 
-                tl.to('.title-separator', {
-                    width: window.innerWidth > 768 ? '180px' : '80%',
-                    duration: 0.8,
-                    ease: "power3.out"
-                }, 0.8);
+function glitch(){
+  const tw=document.getElementById('tw');
+  tw.classList.add('glitch');
+  setTimeout(()=>tw.classList.remove('glitch'),150);
+}
 
-                tl.to('.menu-list', {
-                    opacity: 1,
-                    duration: 0.1
-                }, 0.9);
+function reveal(){
+  if(revealed)return;
+  revealed=true;
+  removeEventListener('keydown',reveal);
+  removeEventListener('pointerdown',reveal);
+  initAC();if(AC&&AC.state==='suspended')AC.resume();
 
-                tl.fromTo('.menu-item', 
-                    { opacity: 0, x: -30, filter: "blur(5px)" }, 
-                    { 
-                        opacity: 1, 
-                        x: 0, 
-                        filter: "blur(0px)",
-                        duration: 0.8, 
-                        stagger: 0.1, 
-                        ease: "power3.out" 
-                    }, 
-                0.9);
-            };
+  gsap.fromTo('#fl',{opacity:.5},{opacity:0,duration:1.6,ease:'power3.out'});
+  gsap.to('#gate',{opacity:0,duration:.38,ease:'power2.inOut',onComplete:()=>document.getElementById('gate').remove()});
 
-            window.addEventListener('keydown', igniteMenu);
-            window.addEventListener('click', igniteMenu);
-            window.addEventListener('touchstart', igniteMenu, { passive: true });
-            
-            window.addEventListener('contextmenu', e => e.preventDefault());
-        });
-    </script>
+  const tl=gsap.timeline({delay:.32});
+
+  tl.fromTo('#tw',{opacity:0,y:16},{opacity:1,y:0,duration:1.05,ease:'power3.out'});
+  tl.to('.tg',{opacity:.34,duration:1.1,ease:'power2.out'},'<.12');
+  tl.to('#sep',{transform:'translateX(0)',duration:.8,ease:'expo.out'},'<.3');
+
+  tl.to('#ml',{opacity:1,duration:.01},'<.4');
+  tl.fromTo('.menu-item',{opacity:0,x:-14},{opacity:1,x:0,duration:.6,stagger:.09,ease:'power3.out'},'<');
+
+  tl.to('.mk',{opacity:1,duration:.6,ease:'power2.out'},'<.12');
+  tl.to('#sfx-btn',{opacity:1,duration:.5,ease:'power2.out'},'<.22');
+
+  tl.add(glitch, 1.1);
+  setTimeout(glitch,2400);
+  setTimeout(glitch,4100);
+  setTimeout(()=>{glitch();setTimeout(glitch,120);},6800);
+}
+
+addEventListener('keydown',reveal);
+addEventListener('pointerdown',reveal,{passive:true});
+addEventListener('contextmenu',e=>e.preventDefault());
+
+})();
+</script>
 </body>
 </html>
