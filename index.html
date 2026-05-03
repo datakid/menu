@@ -319,7 +319,9 @@ let revealed=false;
   parts.forEach(p=>{tickP(p);drawP(p);});
   if(revealed&&!reduced){
     const px=(mx-.5)*-9,py=(my-.5)*-5;
-    ui.style.transform=`translateY(calc(-50% + ${py}px)) translateX(${px}px)`;
+    if(innerWidth>768){
+      ui.style.transform=`translateY(calc(-50% + ${py}px)) translateX(${px}px)`;
+    }
   }
 })();
 
