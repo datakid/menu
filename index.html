@@ -88,7 +88,7 @@ html,body{width:100vw;height:100vh;background:var(--bg);overflow:hidden;-webkit-
 .title-wrap.glitch .tcb{opacity:.5;transform:translate(6px,-1px)}
 
 .sep-wrap{margin-top:1rem;overflow:hidden;height:1px}
-.sep{height:1px;width:180px;background:linear-gradient(90deg,var(--goldl) 0%,var(--red2) 55%,transparent 100%);box-shadow:0 0 8px var(--redgl),0 0 3px rgba(180,140,60,.28);transform:translateX(-190px)}
+.sep{height:1px;width:180px;background:linear-gradient(90deg,var(--goldl) 0%,var(--red2) 55%,transparent 100%);box-shadow:0 0 8px var(--redgl),0 0 3px rgba(180,140,60,.28)}
 
 .menu-list{list-style:none;display:flex;flex-direction:column;gap:1.5rem;opacity:0}
 .menu-item{position:relative}
@@ -141,6 +141,13 @@ html,body{width:100vw;height:100vh;background:var(--bg);overflow:hidden;-webkit-
 @keyframes breathe{0%,100%{opacity:.15}50%{opacity:.7}}
 
 .fl{position:fixed;inset:0;z-index:40;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(120,0,0,.6),transparent 68%);opacity:0}
+.blackout{position:fixed;inset:0;z-index:45;background:#000;opacity:0;pointer-events:none}
+
+@media(prefers-reduced-motion:reduce){
+  .ns{animation:none}
+  @keyframes sheen{0%,100%{background-position:100% 0}}
+  @keyframes breathe{0%,100%{opacity:.4}50%{opacity:.8}}
+}
 
 @media(max-width:768px){
   .ui{left:50%;transform:translate(-50%,-50%);align-items:center;width:90%;gap:2.4rem}
@@ -148,7 +155,7 @@ html,body{width:100vw;height:100vh;background:var(--bg);overflow:hidden;-webkit-
   .tg,.tcr,.tcb{font-size:clamp(2rem,8.5vw,2.8rem);letter-spacing:.12em;left:50%;transform:translateX(-50%)}
   .title-wrap.glitch .tcr{transform:translateX(calc(-50% - 5px))}
   .title-wrap.glitch .tcb{transform:translateX(calc(-50% + 5px))}
-  .sep{width:90px;background:linear-gradient(90deg,transparent,var(--red2),var(--goldl),var(--red2),transparent);transform:translateX(-100px)}
+  .sep{width:90px;background:linear-gradient(90deg,transparent,var(--red2),var(--goldl),var(--red2),transparent)}
   .menu-list{align-items:center}
   .menu-link .gem{display:none}
   .menu-link:hover{transform:translateY(-2px)}
@@ -162,7 +169,8 @@ html,body{width:100vw;height:100vh;background:var(--bg);overflow:hidden;-webkit-
 <div class="ns"></div>
 <div class="fl" id="fl"></div>
 
-<div class="gate" id="gate"><p class="gate-txt">Press Any Key</p></div>
+<div class="blackout" id="blackout"></div>
+<div class="gate" id="gate"><p class="gate-txt" id="gate-txt">Press Any Key</p></div>
 
 <div class="ui" id="ui">
   <div class="title-wrap" id="tw">
@@ -222,7 +230,13 @@ html,body{width:100vw;height:100vh;background:var(--bg);overflow:hidden;-webkit-
 
 const cv=document.getElementById('cv');
 const cx=cv.getContext('2d');
+const ui=document.getElementById('ui');
 let W,H,mx=.5,my=.5,tmx=.5,tmy=.5;
+let driftT=0;
+const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+if('ontouchstart' in window||navigator.maxTouchPoints>0)
+  document.getElementById('gate-txt').textContent='Tap to Enter';
 
 function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}
 resize();
@@ -279,17 +293,23 @@ function drawP(p){
 }
 
 function drawBg(){
-  const bx=W*(.41+.17*(1-mx)),by=H*(.37+.2*my);
+  driftT+=.004;
+  const dox=Math.sin(driftT*.7)*.06;
+  const doy=Math.cos(driftT*.5)*.04;
+  const bx=W*(.41+.17*(1-mx)+dox),by=H*(.37+.2*my+doy);
   const g=cx.createRadialGradient(bx,by,0,bx,by,W*.88);
   g.addColorStop(0,'#130809');
   g.addColorStop(.28,'#0b0405');
   g.addColorStop(.65,'#060305');
   g.addColorStop(1,'#07060a');
   cx.fillStyle=g;cx.fillRect(0,0,W,H);
-  const g2=cx.createRadialGradient(bx,by,0,bx,by,W*.4);
-  g2.addColorStop(0,'rgba(70,0,0,.08)');g2.addColorStop(1,'rgba(0,0,0,0)');
+  const pulse=.055+Math.sin(driftT*1.1)*.02;
+  const g2=cx.createRadialGradient(bx,by,0,bx,by,W*.42);
+  g2.addColorStop(0,`rgba(70,0,0,${pulse})`);g2.addColorStop(1,'rgba(0,0,0,0)');
   cx.fillStyle=g2;cx.fillRect(0,0,W,H);
 }
+
+let revealed=false;
 
 (function loop(){
   requestAnimationFrame(loop);
@@ -297,6 +317,10 @@ function drawBg(){
   cx.clearRect(0,0,W,H);
   drawBg();
   parts.forEach(p=>{tickP(p);drawP(p);});
+  if(revealed&&!reduced){
+    const px=(mx-.5)*-9,py=(my-.5)*-5;
+    ui.style.transform=`translateY(calc(-50% + ${py}px)) translateX(${px}px)`;
+  }
 })();
 
 let AC=null,MG=null,SFX=false;
@@ -350,23 +374,33 @@ document.querySelectorAll('.menu-link').forEach(el=>el.addEventListener('mouseen
 
 document.getElementById('exit-btn').addEventListener('click',e=>{
   e.preventDefault();sndClk();
-  gsap.fromTo('#fl',{opacity:.45},{opacity:0,duration:.9,ease:'power3.out'});
   gsap.timeline()
-    .to('#ui',{x:-45,opacity:0,duration:.55,ease:'power3.in'},0)
-    .to('.mk',{opacity:0,duration:.35},0)
-    .to('#sfx-btn',{opacity:0,duration:.35},0)
-    .to('#cv',{opacity:0,duration:.8,ease:'power2.in'},0.18)
+    .to('#ui',{x:-45,opacity:0,duration:.5,ease:'power3.in'},0)
+    .to(['.mk','#sfx-btn'],{opacity:0,duration:.3},0)
+    .to('#blackout',{opacity:1,duration:.9,ease:'power2.inOut'},0.2)
     .add(()=>{try{window.close();}catch(_){}});
 });
 
-document.querySelectorAll('a.menu-link').forEach(a=>a.addEventListener('click',sndClk));
+document.querySelectorAll('a.menu-link').forEach(a=>a.addEventListener('click',()=>{
+  sndClk();
+  gsap.fromTo('#fl',{opacity:.3},{opacity:0,duration:.7,ease:'power3.out'});
+}));
 
-let revealed=false;
+const tw=document.getElementById('tw');
 
 function glitch(){
-  const tw=document.getElementById('tw');
+  if(reduced)return;
   tw.classList.add('glitch');
   setTimeout(()=>tw.classList.remove('glitch'),150);
+}
+
+function scheduleGlitch(){
+  const delay=8000+Math.random()*12000;
+  setTimeout(()=>{
+    glitch();
+    if(Math.random()>.6)setTimeout(glitch,130);
+    scheduleGlitch();
+  },delay);
 }
 
 function reveal(){
@@ -379,22 +413,22 @@ function reveal(){
   gsap.fromTo('#fl',{opacity:.5},{opacity:0,duration:1.6,ease:'power3.out'});
   gsap.to('#gate',{opacity:0,duration:.38,ease:'power2.inOut',onComplete:()=>document.getElementById('gate').remove()});
 
-  const tl=gsap.timeline({delay:.32});
+  gsap.set('#sep',{x:-200});
 
+  const tl=gsap.timeline({delay:.32});
   tl.fromTo('#tw',{opacity:0,y:16},{opacity:1,y:0,duration:1.05,ease:'power3.out'});
   tl.to('.tg',{opacity:.34,duration:1.1,ease:'power2.out'},'<.12');
-  tl.to('#sep',{transform:'translateX(0)',duration:.8,ease:'expo.out'},'<.3');
+  tl.to('#sep',{x:0,duration:.82,ease:'expo.out'},'<.28');
 
-  tl.to('#ml',{opacity:1,duration:.01},'<.4');
+  tl.to('#ml',{opacity:1,duration:.01},'<.38');
   tl.fromTo('.menu-item',{opacity:0,x:-14},{opacity:1,x:0,duration:.6,stagger:.09,ease:'power3.out'},'<');
+  tl.to('.mk',{opacity:1,duration:.6,ease:'power2.out'},'<.1');
+  tl.to('#sfx-btn',{opacity:1,duration:.5,ease:'power2.out'},'<.2');
 
-  tl.to('.mk',{opacity:1,duration:.6,ease:'power2.out'},'<.12');
-  tl.to('#sfx-btn',{opacity:1,duration:.5,ease:'power2.out'},'<.22');
-
-  tl.add(glitch, 1.1);
-  setTimeout(glitch,2400);
-  setTimeout(glitch,4100);
-  setTimeout(()=>{glitch();setTimeout(glitch,120);},6800);
+  tl.add(glitch,1.1);
+  setTimeout(glitch,2500);
+  setTimeout(()=>{glitch();setTimeout(glitch,120);},4200);
+  setTimeout(scheduleGlitch,7000);
 }
 
 addEventListener('keydown',reveal);
