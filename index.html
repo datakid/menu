@@ -12,7 +12,7 @@
   --clay: #E0794F;
   --clay-2: #C96442;
   --sage: #9CAB90;
-  --r-xl: 40px;
+  --r-xl: 42px;
   --r-lg: 30px;
   --ease: cubic-bezier(.22,.9,.24,1);
 }
@@ -26,13 +26,16 @@ html[data-theme="dark"]{
   --surface: rgba(255,255,255,.035);
   --surface-strong: rgba(255,255,255,.06);
   --border: rgba(255,255,255,.08);
-  --border-hover: rgba(255,255,255,.16);
+  --border-hover: rgba(255,255,255,.18);
   --white-glow: rgba(255,255,255,.05);
   --dark-glow: rgba(0,0,0,.55);
   --inset-l: rgba(255,255,255,.05);
   --inset-d: rgba(0,0,0,.4);
-  --bloom-1: rgba(224,121,79,.10);
+  --bloom-1: rgba(224,121,79,.11);
   --bloom-2: rgba(156,171,144,.08);
+  --clay-shadow: rgba(224,121,79,.22);
+  --sage-shadow: rgba(156,171,144,.16);
+  --grain-op: .05;
 }
 
 html[data-theme="light"]{
@@ -42,15 +45,18 @@ html[data-theme="light"]{
   --ink-45: rgba(31,27,22,.42);
   --ink-15: rgba(31,27,22,.10);
   --surface: rgba(255,255,255,.5);
-  --surface-strong: rgba(255,255,255,.7);
-  --border: rgba(255,255,255,.55);
-  --border-hover: rgba(255,255,255,.85);
-  --white-glow: rgba(255,255,255,.8);
+  --surface-strong: rgba(255,255,255,.72);
+  --border: rgba(255,255,255,.6);
+  --border-hover: rgba(255,255,255,.92);
+  --white-glow: rgba(255,255,255,.85);
   --dark-glow: rgba(31,27,22,.13);
-  --inset-l: rgba(255,255,255,.7);
+  --inset-l: rgba(255,255,255,.75);
   --inset-d: rgba(31,27,22,.11);
-  --bloom-1: rgba(201,100,66,.08);
-  --bloom-2: rgba(124,138,114,.09);
+  --bloom-1: rgba(201,100,66,.09);
+  --bloom-2: rgba(124,138,114,.10);
+  --clay-shadow: rgba(201,100,66,.18);
+  --sage-shadow: rgba(124,138,114,.14);
+  --grain-op: .035;
 }
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -71,6 +77,16 @@ body::before{
     radial-gradient(ellipse 900px 750px at 105% 60%, var(--bloom-2), transparent 60%);
   transition: background .4s var(--ease);
 }
+
+/* film-grain overlay — keeps the soft neomorphic surfaces from reading flat/plasticky */
+body::after{
+  content:'';
+  position:fixed; inset:0; z-index:5; pointer-events:none;
+  opacity: var(--grain-op);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 .glow{
   position:fixed; inset:0; z-index:0; pointer-events:none;
   background: radial-gradient(560px circle at var(--gx,50%) var(--gy,30%), var(--bloom-1), transparent 65%);
@@ -93,6 +109,7 @@ body::before{
 .mark svg{ width:28px; height:28px; }
 .wordmark{
   font-family:'Fraunces', serif; font-weight:600; font-size:1.25rem; letter-spacing:.01em;
+  font-variation-settings: 'opsz' 30;
 }
 .hdr-sub{
   font-family:'JetBrains Mono', monospace; font-size:.68rem; letter-spacing:.08em;
@@ -147,6 +164,19 @@ body::before{
   display:flex; flex-direction:column; justify-content:space-between;
   transition: transform .32s var(--ease), box-shadow .32s var(--ease), border-color .32s var(--ease), background .4s var(--ease);
 }
+
+/* gradient hairline ring — replaces the flat border-color swap on hover */
+.card::before{
+  content:'';
+  position:absolute; inset:0; border-radius:inherit; padding:1px;
+  background: conic-gradient(from var(--ang,0deg), var(--clay), transparent 30%, transparent 70%, var(--sage));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity:0; transition: opacity .35s var(--ease);
+  pointer-events:none;
+}
+.card:hover::before{ opacity:.55; }
+
 .card:hover{ transform: translateY(-4px); border-color: var(--border-hover); }
 .card:active{ transform: translateY(-1px) scale(.986); }
 .card:focus-visible{
@@ -158,10 +188,12 @@ body::before{
 }
 
 .ghost-num{
-  position:absolute; right:.4rem; bottom:-.4rem;
+  position:absolute; right:.2rem; bottom:-.6rem;
   font-family:'Fraunces', serif; font-weight:300; font-style:italic;
+  font-variation-settings: 'opsz' 9;
   font-size:clamp(6rem,11vw,10rem); line-height:1;
-  color: var(--ink); opacity:.05; pointer-events:none; user-select:none;
+  color: var(--ink); opacity:.04; pointer-events:none; user-select:none;
+  filter: blur(.4px);
 }
 
 .card-top{ display:flex; align-items:flex-start; justify-content:space-between; padding: clamp(1.4rem,2vw,2.2rem) clamp(1.4rem,2vw,2.2rem) 0; position:relative; z-index:1; }
@@ -171,7 +203,9 @@ body::before{
   display:flex; align-items:center; justify-content:center;
   background: var(--surface-strong);
   box-shadow: inset 1.5px 1.5px 4px var(--inset-d), inset -1.5px -1.5px 4px var(--inset-l);
+  transition: transform .38s var(--ease);
 }
+.card:hover .card-ico{ transform: rotate(-8deg) scale(1.06); }
 .card-ico svg{ width:19px; height:19px; stroke:var(--clay); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
 
 .card-body{ padding: 0 clamp(1.4rem,2vw,2.2rem); position:relative; z-index:1; }
@@ -190,22 +224,42 @@ body::before{
   box-shadow: inset 1.5px 1.5px 4px var(--inset-d), inset -1.5px -1.5px 4px var(--inset-l);
   transition: transform .28s var(--ease), background .28s var(--ease);
 }
-.card:hover .card-arrow{ transform: translateX(4px); background: rgba(224,121,79,.16); }
+.card:hover .card-arrow{ transform: translateX(4px) rotate(-4deg); background: rgba(224,121,79,.16); }
 .card-arrow svg{ width:15px; height:15px; stroke:var(--ink-70); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .card:hover .card-arrow svg{ stroke: var(--clay); }
 
-.c-new{ grid-column: 1 / 2; grid-row: 1 / 3; border-radius: var(--r-xl); }
-.c-new .card-title{ font-size: clamp(2.2rem,3.6vw,3.6rem); margin-top:0; }
+.c-new{
+  grid-column: 1 / 2; grid-row: 1 / 3; border-radius: var(--r-xl);
+  box-shadow:
+    -7px -7px 18px var(--white-glow),
+    14px 14px 34px var(--clay-shadow),
+    inset 0 1px 0 var(--inset-l);
+  animation: breathe 6s ease-in-out infinite;
+}
+.c-new:hover{ animation-play-state: paused; }
+@keyframes breathe{
+  0%,100%{ box-shadow: -7px -7px 18px var(--white-glow), 14px 14px 34px var(--clay-shadow), inset 0 1px 0 var(--inset-l); }
+  50%{ box-shadow: -7px -7px 18px var(--white-glow), 14px 14px 44px var(--clay-shadow), inset 0 1px 0 var(--inset-l); }
+}
+.c-new .card-title{ font-size: clamp(2.2rem,3.6vw,3.6rem); margin-top:0; font-variation-settings: 'opsz' 144; }
 .c-new .card-sub{ font-size: clamp(.9rem,1vw,1.05rem); max-width:32ch; }
 
-.c-load{ grid-column: 2 / 3; grid-row: 1 / 2; border-radius: var(--r-lg); }
-.c-load .card-title{ font-size: clamp(1.4rem,1.9vw,1.9rem); }
+.c-load{
+  grid-column: 2 / 3; grid-row: 1 / 2; border-radius: var(--r-lg);
+  box-shadow:
+    -7px -7px 18px var(--white-glow),
+    11px 11px 28px var(--sage-shadow),
+    inset 0 1px 0 var(--inset-l);
+}
+.c-load .card-title{ font-size: clamp(1.4rem,1.9vw,1.9rem); font-variation-settings: 'opsz' 40; }
 .c-load .card-sub{ font-size:.85rem; }
 
-.c-exit{ grid-column: 2 / 3; grid-row: 2 / 3; border-radius: var(--r-lg); border-color: rgba(224,121,79,.16); }
+.c-exit{
+  grid-column: 2 / 3; grid-row: 2 / 3; border-radius: var(--r-lg); border-color: rgba(224,121,79,.16);
+}
 .c-exit .card-top{ padding-bottom:0; }
 .c-exit .card-ico{ background: rgba(224,121,79,.1); }
-.c-exit .card-title{ font-size: clamp(1.2rem,1.6vw,1.5rem); }
+.c-exit .card-title{ font-size: clamp(1.2rem,1.6vw,1.5rem); font-variation-settings: 'opsz' 30; }
 .c-exit .card-sub{ font-size:.82rem; }
 
 .ftr{
@@ -220,6 +274,7 @@ body::before{
   .shell{ height:auto; min-height:100vh; }
   .bento{ grid-template-columns: 1fr; grid-template-rows: none; }
   .c-new, .c-load, .c-exit{ grid-column: 1 / 2; grid-row: auto; min-height:220px; }
+  .c-new{ animation: none; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -384,6 +439,17 @@ body::before{
       glow.style.setProperty('--gx', e.clientX + 'px');
       glow.style.setProperty('--gy', e.clientY + 'px');
     }, {passive:true});
+
+    // rotate the gradient ring around each card as the cursor moves across it
+    document.querySelectorAll('.card').forEach(card=>{
+      card.addEventListener('mousemove', e=>{
+        const r = card.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width/2;
+        const y = e.clientY - r.top - r.height/2;
+        const ang = Math.atan2(y, x) * 180 / Math.PI + 90;
+        card.style.setProperty('--ang', ang + 'deg');
+      });
+    });
   }
 
   document.getElementById('exitBtn').addEventListener('click', ()=>{
